@@ -18,9 +18,9 @@ public class GameWindow extends BasicGame {
 	}
 
 	@Override
-	public void init(GameContainer container) throws SlickException {
-		// TODO Auto-generated method stub
-		
+	public void init(GameContainer game) throws SlickException {
+		game.setAlwaysRender(true);
+		game.setTargetFrameRate(60);
 	}
 
 	@Override

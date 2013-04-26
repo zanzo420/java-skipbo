@@ -5,6 +5,7 @@ import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.popups.HostJoinPopup;
 import mist2meat.javaskipbo.popups.JoinServerPopup;
 import mist2meat.javaskipbo.popups.SelectGamemodePopup;
+import mist2meat.javaskipbo.server.Server;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
@@ -29,6 +30,7 @@ public class Main {
 	
 	public static void setGamemode(GameMode gm) {
 		gamemode = gm;
+		
 		try {
 			startGame();
 		} catch (SlickException e) {
@@ -42,12 +44,26 @@ public class Main {
 	
 	private static void startGame() throws SlickException {
 		if(server){
-			//start server
+			Server s = new Server();
+			s.init();
 		}
 		
-		AppGameContainer app = new AppGameContainer(new GameWindow("testipippeli"));
+		final AppGameContainer app = new AppGameContainer(new GameWindow("testipippeli"));
 		
 		app.setDisplayMode(800, 600, false);
-		app.start();
+		
+		Thread t = new Thread(new Runnable(){
+			@Override
+			public void run() {
+					try {
+						app.start();
+					} catch (SlickException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		);
+		t.setDaemon(true);
+		t.start();
 	}
 }
