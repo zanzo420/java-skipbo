@@ -2,9 +2,11 @@ package mist2meat.javaskipbo.client;
 
 import java.net.InetAddress;
 
-import org.newdawn.slick.SlickException;
-
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.popups.EnterNamePopup;
+import mist2meat.javaskipbo.enums.ServerLoginResponse;
+
+import org.newdawn.slick.SlickException;
 
 public class ClientEvents {
 
@@ -12,10 +14,16 @@ public class ClientEvents {
 		Client.log("Server says: "+msg);
 	}
 	
-	public static void serverLoginResponse(boolean success) {
-		if(success){
+	public static void serverLoginResponse(byte response) {
+		if(response == ServerLoginResponse.LOGIN_SUCCESS){
 			Client.log("Login was successfull");
 			Main.client.beginGame();
+		}else if(response == ServerLoginResponse.LOGIN_NAME_TAKEN){
+			Client.log("Login failed: name is in use");
+			new EnterNamePopup(Main.client.name);
+		}else if(response == ServerLoginResponse.LOGIN_SERVER_FULL){
+			Client.log("Login failed: server is full");
+			new EnterNamePopup(Main.client.name);
 		}
 	}
 	

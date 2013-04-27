@@ -13,7 +13,6 @@ public class ServerPacketHandler {
 	}
 	
 	public void parse(DatagramPacket packet) throws IOException {
-		Server.log("Parsing received packet");
 		ReceivedPacket pack = new ReceivedPacket(packet);
 		
 		int type = pack.readByte();
@@ -23,7 +22,6 @@ public class ServerPacketHandler {
 				ServerEvents.playerLogin(name, pack.getPacket().getAddress(), pack.getPacket().getPort());
 				break;
 			case PacketType.PING:
-				Server.log(pack.getPacket().getAddress().getHostAddress()+" pinged us!");
 				ServerEvents.ping(pack.getPacket().getAddress(),pack.getPacket().getPort());
 				break;
 			default:

@@ -16,7 +16,7 @@ public class EnterNamePopup extends JFrame {
 	 */
 	private static final long serialVersionUID = -7785251142342191970L;
 
-	public EnterNamePopup() {
+	public EnterNamePopup(String nam) {
 		setTitle("Enter name");
 		
 		setLocationRelativeTo(null);
@@ -27,7 +27,7 @@ public class EnterNamePopup extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		final JTextField name = new JTextField();
-		name.setText("Enter name");
+		name.setText(nam);
 		name.setSize(200, 20);
 		name.setLocation(5,5);
 		
@@ -52,6 +52,10 @@ public class EnterNamePopup extends JFrame {
 		add(button1);
 		
 		setVisible(true);
+	}
+
+	public EnterNamePopup() {
+		new EnterNamePopup("Enter name");
 	}
 }
 

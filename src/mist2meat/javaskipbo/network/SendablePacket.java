@@ -28,6 +28,13 @@ public class SendablePacket {
 		port = toport;
 	}
 	
+	public SendablePacket(DatagramSocket sock) {
+		socket = sock;
+		
+		baos = new ByteArrayOutputStream();
+		dos = new DataOutputStream(baos);
+	}
+	
 	public DatagramPacket buildPacket() {
 		byte[] data = baos.toByteArray();
 		
@@ -56,5 +63,13 @@ public class SendablePacket {
 	public void send() throws IOException {
 		clean();
 		socket.send(buildPacket());
+	}
+
+	public void setIp(InetAddress host) {
+		ip = host;
+	}
+	
+	public void setPort(int prt) {
+		port = prt;
 	}
 }

@@ -42,6 +42,10 @@ public class Client {
 		}
 	}
 	
+	protected void joinServer() {
+		joinServer(serveripaddr);
+	}
+	
 	private void joinServer(String ip) throws UnknownHostException {
 		serveripaddr = InetAddress.getByName(ip);
 		joinServer(serveripaddr);

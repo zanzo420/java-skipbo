@@ -3,22 +3,19 @@ package mist2meat.javaskipbo.server;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.network.server.PongClientPacket;
 import mist2meat.javaskipbo.network.server.ServerLoginResponsePacket;
-import mist2meat.javaskipbo.network.server.ServerMessagePacket;
+import mist2meat.javaskipbo.server.game.PlayerManager;
 
 public class ServerEvents {
 
 	public static void playerLogin(String name, InetAddress ip, int port) throws IOException {
 		Server.log("Logging in player: "+name+" from "+ip+":"+port);
 		
-		ServerMessagePacket msgpack = new ServerMessagePacket(ServerListener.socket,ip,port);
-		msgpack.setMessage("Login successful!");
-		msgpack.send();
+		byte response = PlayerManager.newPlayer(name, ip, port);
 		
 		ServerLoginResponsePacket resppack = new ServerLoginResponsePacket(ServerListener.socket,ip,port);
-		resppack.setResponse(ServerLoginResponse.LOGIN_SUCCESS);
+		resppack.setResponse(response);
 		resppack.send();
 	}
 	

@@ -1,37 +1,36 @@
 package mist2meat.javaskipbo.server.game;
 
+import java.io.IOException;
+import java.net.InetAddress;
+
+import mist2meat.javaskipbo.network.SendablePacket;
+
 public class Player {
 	
 	private int id;
 	private String name;
 	
+	private InetAddress ip;
+	private int port;
 	
-	//TODO:Networking
-	//private String host;
-	//private int port;
-	
-	public Player(int i){
+	public Player(int i, String nam, InetAddress host, int prt){
 		id = i;
-		name = "Player "+i; //TODO: Select name
+		name = nam;
+		ip = host;
+		port = prt;
 	}
 	
 	public int getID(){
 		return id;
 	}
 	
-	public int getAction(){
-		//System.out.println(name+": Your turn");
-		int action = -1;
-		
-		while(action == -1){
-			//Waiting for packet
-			//PacketHandler
-		}
-		
-		return action; //If function returns -1, an error will be shown
-	}
-	
 	public String getName(){
 		return name;
+	}
+	
+	public void sendPacket(SendablePacket pack) throws IOException {
+		pack.setIp(ip);
+		pack.setPort(port);
+		pack.send();
 	}
 }

@@ -1,6 +1,7 @@
 package mist2meat.javaskipbo.server;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -16,7 +17,7 @@ public class ServerConsole extends JFrame {
 		setTitle("Server Log");
 
 		setLocationRelativeTo(null);
-		setSize(400, 500); // TODO: perfect later
+		setSize(400, 500);
 		setResizable(false);
     	
     	JScrollPane pane = new JScrollPane();
@@ -41,7 +42,10 @@ public class ServerConsole extends JFrame {
 	}
 
 	public void log(String msg) {
-		logbox.setText(logbox.getText()+"["+(new Date())+"] "+msg+System.lineSeparator());
+		Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	    
+		logbox.setText(logbox.getText()+"["+sdf.format(cal.getTime())+"] "+msg+System.lineSeparator());
 		logbox.setCaretPosition(logbox.getText().length());
 	}
 }

@@ -6,6 +6,7 @@ import mist2meat.javaskipbo.client.popups.JoinServerPopup;
 import mist2meat.javaskipbo.client.popups.SelectGamemodePopup;
 import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.server.Server;
+import mist2meat.javaskipbo.server.game.PlayerManager;
 
 import org.newdawn.slick.SlickException;
 
@@ -55,6 +56,8 @@ public class Main {
 		if(useServer){
 			server = new Server();
 			server.start();
+			
+			PlayerManager.maxplayers = (gamemode == GameMode.GAME_1VS1 ? 2 : 4);
 		}
 		
 		client.start();

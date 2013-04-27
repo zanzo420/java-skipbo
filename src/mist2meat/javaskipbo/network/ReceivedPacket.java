@@ -23,7 +23,7 @@ public class ReceivedPacket {
 		return packet;
 	}
 	
-	public int readByte() throws IOException {
+	public byte readByte() throws IOException {
 		return dis.readByte();
 	}
 	

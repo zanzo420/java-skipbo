@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import mist2meat.javaskipbo.enums.PacketType;
-import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.network.ReceivedPacket;
 
 public class ClientPacketHandler {
@@ -14,8 +13,6 @@ public class ClientPacketHandler {
 	}
 	
 	public void parse(DatagramPacket packet) throws IOException {
-		Client.log("Parsing received packet");
-		
 		ReceivedPacket pack = new ReceivedPacket(packet);
 		int type = pack.readByte();
 		switch(type){
@@ -26,7 +23,7 @@ public class ClientPacketHandler {
 				ClientEvents.serverMessage(pack.readString());
 				break;
 			case PacketType.SERVER_LOGIN_RESPONSE:
-				ClientEvents.serverLoginResponse(pack.readByte() == ServerLoginResponse.LOGIN_SUCCESS);
+				ClientEvents.serverLoginResponse(pack.readByte());
 				break;
 			default:
 				Client.log("Unknown packet type: "+type);
