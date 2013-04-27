@@ -33,7 +33,7 @@ public class ClientEvents {
 		try {
 			Main.client.setServerAddress(ip);
 			Main.client.start();
-			Main.client.beginGame();
+			//Main.client.beginGame();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -42,6 +42,9 @@ public class ClientEvents {
 	public static void beginGame(byte gamemode) {
 		Client.log("Game should begin!");
 		Main.gamemode = gamemode;
+		
+		Main.client.beginGame();
+		
 		Main.client.prepareGame();
 	}
 }

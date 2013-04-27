@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.popups.EnterNamePopup;
 import mist2meat.javaskipbo.client.popups.JoinServerPopup;
+import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.JoinServerPacket;
 import mist2meat.javaskipbo.network.client.PingServerPacket;
 
@@ -58,6 +59,7 @@ public class Client {
 		try {
 			JoinServerPacket p = new JoinServerPacket(ClientListener.socket, getServerAddress(), 3625);
 			p.setName(name);
+			
 			p.send();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -101,6 +103,7 @@ public class Client {
 		}
 	}
 	
+	
 	private void startGame() throws SlickException {
 		game = new GameWindow("Java Skip-Bo");
 		final AppGameContainer app = new AppGameContainer(game);
@@ -139,7 +142,6 @@ public class Client {
 	}
 
 	public void prepareGame() {
-		System.out.println(game);
 		game.prepareGame();
 	}
 }

@@ -12,7 +12,8 @@ import mist2meat.javaskipbo.server.game.Player;
 import mist2meat.javaskipbo.server.game.PlayerManager;
 
 public class ServerEvents {
-
+	
+	public static int numresponses = 0;
 	public static void playerLogin(String name, InetAddress ip, int port) throws IOException {
 		Server.log("Logging in player: "+name+" from "+ip+":"+port);
 		
@@ -30,14 +31,7 @@ public class ServerEvents {
 		new PongClientPacket(ServerListener.socket,addr,port).send();
 	}
 	
-	public static void beginGame() {		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+	public static void beginGame() {
 		try {
 			BeginGamePacket pack = new BeginGamePacket(ServerListener.socket);
 			for(Player pl : PlayerManager.players){

@@ -35,23 +35,23 @@ public class GameWindow extends BasicGame {
 	}
 	
 	public void prepareGame() {
-		try {
-			String mode;
-			
-			switch(Main.getGamemode()){
-				case GameMode.GAME_1VS1:
-					mode = "1v1";
-					break;
-				default:
-					mode= "waiting";
-					break;
-			}
-			
-			board.destroy();
-			board = new Image("gfx/boards/"+mode+".png");
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String mode;
+//			
+//			switch(Main.getGamemode()){
+//				case GameMode.GAME_1VS1:
+//					mode = "1v1";
+//					break;
+//				default:
+//					mode= "waiting";
+//					break;
+//			}
+//			
+//			board.destroy();
+//			board = new Image("gfx/boards/"+mode+".png");
+//		} catch (SlickException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override

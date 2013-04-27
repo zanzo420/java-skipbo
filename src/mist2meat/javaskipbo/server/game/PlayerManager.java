@@ -25,12 +25,17 @@ public class PlayerManager {
 			Server.log("Login succeeded!");
 			Server.log("Playercount: "+players.size()+"/"+maxplayers);
 			
+			Server.log(""+ServerEvents.numresponses+"/"+maxplayers);
 			if(players.size() >= maxplayers){
 				ServerEvents.beginGame();
 			}
 			
 			return ServerLoginResponse.LOGIN_SUCCESS;
 		}
+	}
+	
+	public static int getNumPlayers(){
+		return players.size();
 	}
 	
 	public static Player getPlayerByName(String name) {
