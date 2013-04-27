@@ -19,9 +19,12 @@ public class ServerPacketHandler {
 		int type = pack.readByte();
 		switch(type){
 			case PacketType.JOIN_SERVER:
-				Server.log("PlayerLoginPacket");
 				String name = pack.readString();
-				ServerEvents.PlayerLogin(name, pack.getPacket().getAddress(), pack.getPacket().getPort());
+				ServerEvents.playerLogin(name, pack.getPacket().getAddress(), pack.getPacket().getPort());
+				break;
+			case PacketType.PING:
+				Server.log(pack.getPacket().getAddress().getHostAddress()+" pinged us!");
+				ServerEvents.ping(pack.getPacket().getAddress(),pack.getPacket().getPort());
 				break;
 			default:
 				Server.log("Unknown packet type: "+type);

@@ -1,5 +1,9 @@
 package mist2meat.javaskipbo.client;
 
+import java.net.InetAddress;
+
+import org.newdawn.slick.SlickException;
+
 import mist2meat.javaskipbo.Main;
 
 public class ClientEvents {
@@ -12,6 +16,15 @@ public class ClientEvents {
 		if(success){
 			Client.log("Login was successfull");
 			Main.client.beginGame();
+		}
+	}
+	
+	public static void serverPong(InetAddress ip) {
+		try {
+			Main.client.setServerAddress(ip);
+			Main.client.start();
+		} catch (SlickException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -19,6 +19,9 @@ public class ClientPacketHandler {
 		ReceivedPacket pack = new ReceivedPacket(packet);
 		int type = pack.readByte();
 		switch(type){
+			case PacketType.PONG:
+				ClientEvents.serverPong(pack.getPacket().getAddress());
+				break;
 			case PacketType.SERVER_MESSAGE:
 				ClientEvents.serverMessage(pack.readString());
 				break;

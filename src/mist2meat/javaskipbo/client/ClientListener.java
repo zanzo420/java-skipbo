@@ -40,6 +40,7 @@ public class ClientListener {
 			passiveThread.start();
 		}else{
 			Client.log("Stopping passive listener");
+			passiveThread.interrupt();
 		}
 	}
 	

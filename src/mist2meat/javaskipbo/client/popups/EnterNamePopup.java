@@ -2,7 +2,6 @@ package mist2meat.javaskipbo.client.popups;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,15 +9,15 @@ import javax.swing.JTextField;
 
 import mist2meat.javaskipbo.Main;
 
-public class JoinServerPopup extends JFrame {
+public class EnterNamePopup extends JFrame {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7785251142342191970L;
 
-	public JoinServerPopup(String sip) {
-		setTitle("Enter server IP");
+	public EnterNamePopup() {
+		setTitle("Enter name");
 		
 		setLocationRelativeTo(null);
 		setSize(215, 225); //TODO: perfect later
@@ -27,12 +26,12 @@ public class JoinServerPopup extends JFrame {
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		final JTextField ip = new JTextField();
-		ip.setText(sip);
-		ip.setSize(200, 20);
-		ip.setLocation(5,5);
+		final JTextField name = new JTextField();
+		name.setText("Enter name");
+		name.setSize(200, 20);
+		name.setLocation(5,5);
 		
-		add(ip);
+		add(name);
 		
 		JButton button1 = new JButton();
 		button1.setSize(80, 50);
@@ -44,11 +43,7 @@ public class JoinServerPopup extends JFrame {
 		button1.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					Main.client.queryServer(ip.getText());
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
+				Main.client.setName(name.getText());
 				frame.dispose();
 			}
 
@@ -57,10 +52,6 @@ public class JoinServerPopup extends JFrame {
 		add(button1);
 		
 		setVisible(true);
-	}
-	
-	public JoinServerPopup() {
-		new JoinServerPopup("Enter IP");
 	}
 }
 

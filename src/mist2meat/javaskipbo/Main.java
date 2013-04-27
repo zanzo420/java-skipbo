@@ -18,6 +18,8 @@ public class Main {
 	public static Client client;
 	
 	public static void main(String[] args) {
+		client = new Client();
+		client.getListener().setPassive(false);
 		new HostJoinPopup();
 	}
 	
@@ -25,6 +27,7 @@ public class Main {
 		useServer = use;
 		if(useServer){
 			new SelectGamemodePopup();
+			client.getListener().setPassive(true);
 		}else{
 			new JoinServerPopup();
 		}
@@ -54,7 +57,6 @@ public class Main {
 			server.start();
 		}
 		
-		client = new Client();
 		client.start();
 	}
 }

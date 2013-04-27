@@ -15,7 +15,7 @@ public class HostJoinPopup extends JFrame {
 	private static final long serialVersionUID = -4518610456510535660L;
 
 	public HostJoinPopup() {
-		setTitle("penis"); //TODO: fix
+		setTitle("Host or Join");
 		
 		setLocationRelativeTo(null);
 		setSize(215, 225); //TODO: perfect later
