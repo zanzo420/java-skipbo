@@ -3,9 +3,12 @@ package mist2meat.javaskipbo.server;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import mist2meat.javaskipbo.enums.ServerLoginResponse;
+import mist2meat.javaskipbo.network.server.BeginGamePacket;
 import mist2meat.javaskipbo.network.server.PongClientPacket;
 import mist2meat.javaskipbo.network.server.ServerLoginResponsePacket;
 import mist2meat.javaskipbo.server.game.Game;
+import mist2meat.javaskipbo.server.game.Player;
 import mist2meat.javaskipbo.server.game.PlayerManager;
 
 public class ServerEvents {
@@ -17,6 +20,9 @@ public class ServerEvents {
 		
 		ServerLoginResponsePacket resppack = new ServerLoginResponsePacket(ServerListener.socket,ip,port);
 		resppack.setResponse(response);
+		if(response == ServerLoginResponse.LOGIN_SUCCESS){
+			resppack.setID(PlayerManager.getPlayerByName(name).getID());
+		}
 		resppack.send();
 	}
 	
@@ -24,7 +30,23 @@ public class ServerEvents {
 		new PongClientPacket(ServerListener.socket,addr,port).send();
 	}
 	
-	public static void beginGame() {
+	public static void beginGame() {		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			BeginGamePacket pack = new BeginGamePacket(ServerListener.socket);
+			for(Player pl : PlayerManager.players){
+				pl.sendPacket(pack);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		Server.currentGame = new Game();
 	}
 }

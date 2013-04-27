@@ -12,7 +12,7 @@ import org.newdawn.slick.SlickException;
 
 public class Main {
 	
-	private static GameMode gamemode;
+	public static byte gamemode;
 	private static boolean useServer;
 	
 	public static Server server;
@@ -38,7 +38,7 @@ public class Main {
 		return useServer;
 	}
 	
-	public static void setGamemode(GameMode gm) {
+	public static void setGamemode(byte gm) {
 		gamemode = gm;
 		
 		try {
@@ -48,18 +48,18 @@ public class Main {
 		}
 	}
 	
-	public static GameMode getGamemode() {
+	public static byte getGamemode() {
 		return gamemode;
 	}
 	
 	private static void startGame() throws SlickException {
+		client.start();
+		
 		if(useServer){
 			server = new Server();
 			server.start();
 			
 			PlayerManager.maxplayers = (gamemode == GameMode.GAME_1VS1 ? 2 : 4);
 		}
-		
-		client.start();
 	}
 }

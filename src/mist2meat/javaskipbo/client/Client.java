@@ -19,6 +19,7 @@ public class Client {
 	private ClientListener listener;
 	private InetAddress serveripaddr;
 	public String name;
+	private GameWindow game;
 
 	public Client() {
 		listener = new ClientListener();
@@ -34,11 +35,12 @@ public class Client {
 		if(Main.isHosting()){
 			try {
 				joinServer("127.0.0.1");
+				Main.client.beginGame();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
 		}else{
-			joinServer(serveripaddr);
+			joinServer();
 		}
 	}
 	
@@ -91,8 +93,7 @@ public class Client {
 		}
 	}
 	
-	public void beginGame() { // called when game should start (all players joined)
-		// TODO: wait for more players
+	public void beginGame() {
 		try {
 			startGame();
 		} catch (SlickException e) {
@@ -101,7 +102,8 @@ public class Client {
 	}
 	
 	private void startGame() throws SlickException {
-		final AppGameContainer app = new AppGameContainer(new GameWindow("Java Skip-Bo"));
+		game = new GameWindow("Java Skip-Bo");
+		final AppGameContainer app = new AppGameContainer(game);
 
 		app.setDisplayMode(800, 600, false);
 
@@ -134,5 +136,10 @@ public class Client {
 
 	public void setServerAddress(InetAddress ip) {
 		serveripaddr = ip;
+	}
+
+	public void prepareGame() {
+		System.out.println(game);
+		game.prepareGame();
 	}
 }

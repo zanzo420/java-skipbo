@@ -17,4 +17,8 @@ public class ServerLoginResponsePacket extends SendablePacket {
 	public void setResponse(byte msg) throws IOException {
 		writeByte(msg);
 	}
+	
+	public void setID(byte id) throws IOException {
+		writeByte(id);
+	}
 }

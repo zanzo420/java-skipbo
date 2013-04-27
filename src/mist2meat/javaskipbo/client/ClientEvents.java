@@ -3,6 +3,7 @@ package mist2meat.javaskipbo.client;
 import java.net.InetAddress;
 
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.game.LocalPlayer;
 import mist2meat.javaskipbo.client.popups.EnterNamePopup;
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
 
@@ -14,10 +15,11 @@ public class ClientEvents {
 		Client.log("Server says: "+msg);
 	}
 	
-	public static void serverLoginResponse(byte response) {
+	public static void serverLoginResponse(byte response, byte id) {
 		if(response == ServerLoginResponse.LOGIN_SUCCESS){
 			Client.log("Login was successfull");
-			Main.client.beginGame();
+			LocalPlayer.id = id;
+			Client.log("Got ID: "+id);
 		}else if(response == ServerLoginResponse.LOGIN_NAME_TAKEN){
 			Client.log("Login failed: name is in use");
 			new EnterNamePopup(Main.client.name);
@@ -31,13 +33,15 @@ public class ClientEvents {
 		try {
 			Main.client.setServerAddress(ip);
 			Main.client.start();
+			Main.client.beginGame();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void beginGame() {
-		// TODO: build game / prepare for card dealing
+	public static void beginGame(byte gamemode) {
 		Client.log("Game should begin!");
+		Main.gamemode = gamemode;
+		Main.client.prepareGame();
 	}
 }

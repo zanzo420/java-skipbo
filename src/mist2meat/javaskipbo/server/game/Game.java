@@ -3,8 +3,10 @@ package mist2meat.javaskipbo.server.game;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.enums.GameMode;
+import mist2meat.javaskipbo.game.Card;
 import mist2meat.javaskipbo.server.Server;
-import mist2meat.javaskipbo.server.game.content.Card;
 
 public class Game {
 	
@@ -29,17 +31,18 @@ public class Game {
 			deck.add(new Card((byte)13));
 			
 		}
-		Server.log(""+deck.size());
 		
 		Collections.shuffle(deck);
-		for(Card c : deck){
-			System.out.println(c.getNum());
+		
+		int cards = (Main.getGamemode() == GameMode.GAME_2VS2 ? 15 : 20);
+		
+		for(Player pl : PlayerManager.players){
+			for(int i = 0; i < cards; i++){
+				pl.addCardtoDeck(deck.get(deck.size()-1));
+				deck.remove(deck.size()-1);
+			}
 		}
 		
-		
+		Server.log("Cards dealed");
 	}
-	
-	
-
-
 }

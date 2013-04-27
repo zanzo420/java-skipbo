@@ -24,7 +24,11 @@ public class ReceivedPacket {
 	}
 	
 	public byte readByte() throws IOException {
-		return dis.readByte();
+		if(dis.available() > 0){
+			return dis.readByte();
+		}else{
+			return -1;
+		}
 	}
 	
 	public String readString() throws IOException {

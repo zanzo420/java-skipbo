@@ -1,4 +1,4 @@
-package mist2meat.javaskipbo.server.game.content;
+package mist2meat.javaskipbo.game;
 
 public class Card {
 	

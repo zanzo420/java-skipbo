@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import mist2meat.javaskipbo.game.Card;
 import mist2meat.javaskipbo.network.SendablePacket;
-import mist2meat.javaskipbo.server.game.content.Card;
 
 public class Player {
 	
-	private int id;
+	private byte id;
 	private String name;
 	
 	private InetAddress ip;
@@ -20,7 +20,7 @@ public class Player {
 	private ArrayList<Card> deck = new ArrayList<Card>();
 	private Map<Integer, ArrayList<Card>> freedecks = new HashMap<Integer, ArrayList<Card>>();
 	
-	public Player(int i, String nam, InetAddress host, int prt){
+	public Player(byte i, String nam, InetAddress host, int prt){
 		id = i;
 		name = nam;
 		ip = host;
@@ -29,7 +29,7 @@ public class Player {
 		
 	}
 	
-	public int getID(){
+	public byte getID(){
 		return id;
 	}
 	
@@ -51,7 +51,7 @@ public class Player {
 		return deck;
 	}
 	
-	public void addCardtoDeck(byte num){
-		deck.add(new Card(num));
+	public void addCardtoDeck(Card card){
+		deck.add(card);
 	}
 }
