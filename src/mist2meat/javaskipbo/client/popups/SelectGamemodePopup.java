@@ -1,4 +1,4 @@
-package mist2meat.javaskipbo.popups;
+package mist2meat.javaskipbo.client.popups;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +36,7 @@ public class SelectGamemodePopup extends JFrame {
 		button1.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
+				frame.dispose();
 				Main.setGamemode(GameMode.GAME_1VS1);
 			}
 		});
@@ -51,7 +51,7 @@ public class SelectGamemodePopup extends JFrame {
 		button2.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
+				frame.dispose();
 				Main.setGamemode(GameMode.GAME_2VS2);
 			}
 		});

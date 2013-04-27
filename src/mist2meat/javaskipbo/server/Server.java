@@ -3,13 +3,20 @@ package mist2meat.javaskipbo.server;
 public class Server {
 
 	private static ServerConsole console;
+	private ServerListener listener;
 	
 	public Server() {
 		console = new ServerConsole();
+		listener = new ServerListener();
+	}
+	
+	public void start() {
+		log("Starting server");
+		init();
 	}
 	
 	public void init() {
-		//TODO: init server
+		listener.setPassive(true);
 		log("Server initialized");
 	}
 	

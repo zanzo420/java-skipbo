@@ -1,4 +1,4 @@
-package mist2meat.javaskipbo.popups;
+package mist2meat.javaskipbo.client.popups;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +26,7 @@ public class JoinServerPopup extends JFrame {
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-		JTextField ip = new JTextField();
+		final JTextField ip = new JTextField();
 		ip.setText("Enter IP");
 		ip.setSize(200, 20);
 		ip.setLocation(5,5);
@@ -43,7 +43,8 @@ public class JoinServerPopup extends JFrame {
 		button1.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: query server
+				frame.dispose();
+				Main.client.queryServer(ip.getText());
 			}
 
 		});

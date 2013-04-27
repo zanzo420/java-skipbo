@@ -36,6 +36,8 @@ public class ServerConsole extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		setVisible(true);
+		
+		setLocation(0,getLocation().y);
 	}
 
 	public void log(String msg) {

@@ -24,10 +24,8 @@ public class GameWindow extends BasicGame {
 	}
 
 	@Override
-	public void update(GameContainer container, int delta)
-			throws SlickException {
+	public void update(GameContainer container, int delta) throws SlickException {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

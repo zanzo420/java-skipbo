@@ -1,0 +1,33 @@
+package mist2meat.javaskipbo.client;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+
+import mist2meat.javaskipbo.enums.PacketType;
+import mist2meat.javaskipbo.enums.ServerLoginResponse;
+import mist2meat.javaskipbo.network.ReceivedPacket;
+
+public class ClientPacketHandler {
+
+	public ClientPacketHandler() {
+		
+	}
+	
+	public void parse(DatagramPacket packet) throws IOException {
+		Client.log("Parsing received packet");
+		
+		ReceivedPacket pack = new ReceivedPacket(packet);
+		int type = pack.readByte();
+		switch(type){
+			case PacketType.SERVER_MESSAGE:
+				ClientEvents.serverMessage(pack.readString());
+				break;
+			case PacketType.SERVER_LOGIN_RESPONSE:
+				ClientEvents.serverLoginResponse(pack.readByte() == ServerLoginResponse.LOGIN_SUCCESS);
+				break;
+			default:
+				Client.log("Unknown packet type: "+type);
+				break;
+		}
+	}
+}
