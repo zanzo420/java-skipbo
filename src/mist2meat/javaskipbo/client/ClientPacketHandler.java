@@ -25,6 +25,9 @@ public class ClientPacketHandler {
 			case PacketType.SERVER_LOGIN_RESPONSE:
 				ClientEvents.serverLoginResponse(pack.readByte());
 				break;
+			case PacketType.GAME_BEGIN:
+				ClientEvents.beginGame();
+				break;
 			default:
 				Client.log("Unknown packet type: "+type);
 				break;

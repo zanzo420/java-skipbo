@@ -22,4 +22,8 @@ public class ServerEvents {
 	public static void ping(InetAddress addr, int port) throws IOException {
 		new PongClientPacket(ServerListener.socket,addr,port).send();
 	}
+	
+	public static void beginGame() {
+		
+	}
 }

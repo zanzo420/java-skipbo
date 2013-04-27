@@ -1,10 +1,14 @@
 package mist2meat.javaskipbo.server.game;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
+import mist2meat.javaskipbo.network.server.BeginGamePacket;
 import mist2meat.javaskipbo.server.Server;
+import mist2meat.javaskipbo.server.ServerEvents;
+import mist2meat.javaskipbo.server.ServerListener;
 
 
 public class PlayerManager {
@@ -25,7 +29,17 @@ public class PlayerManager {
 			Server.log("Playercount: "+players.size()+"/"+maxplayers);
 			
 			if(players.size() >= maxplayers){
-				//TODO: game should start
+				//TODO: game should start - inform clients - build game - deal cards - first players' turn
+				try {
+					BeginGamePacket pack = new BeginGamePacket(ServerListener.socket);
+					for(Player pl : players){
+						pl.sendPacket(pack);
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ServerEvents.beginGame();
 			}
 			
 			return ServerLoginResponse.LOGIN_SUCCESS;

@@ -35,4 +35,9 @@ public class ClientEvents {
 			e.printStackTrace();
 		}
 	}
+
+	public static void beginGame() {
+		// TODO: build game / prepare for card dealing
+		Client.log("Game should begin!");
+	}
 }
