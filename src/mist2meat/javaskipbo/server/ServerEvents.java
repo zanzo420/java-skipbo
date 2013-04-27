@@ -5,6 +5,7 @@ import java.net.InetAddress;
 
 import mist2meat.javaskipbo.network.server.PongClientPacket;
 import mist2meat.javaskipbo.network.server.ServerLoginResponsePacket;
+import mist2meat.javaskipbo.server.game.Game;
 import mist2meat.javaskipbo.server.game.PlayerManager;
 
 public class ServerEvents {
@@ -24,6 +25,6 @@ public class ServerEvents {
 	}
 	
 	public static void beginGame() {
-		
+		Server.currentGame = new Game();
 	}
 }

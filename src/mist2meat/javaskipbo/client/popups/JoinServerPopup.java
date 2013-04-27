@@ -60,7 +60,7 @@ public class JoinServerPopup extends JFrame {
 	}
 	
 	public JoinServerPopup() {
-		new JoinServerPopup("Enter IP");
+		new JoinServerPopup("127.0.0.1");
 	}
 }
 

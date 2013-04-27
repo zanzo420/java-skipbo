@@ -1,9 +1,12 @@
 package mist2meat.javaskipbo.server;
 
+import mist2meat.javaskipbo.server.game.Game;
+
 public class Server {
 
 	private static ServerConsole console;
 	private ServerListener listener;
+	public static Game currentGame;
 	
 	public Server() {
 		console = new ServerConsole();
