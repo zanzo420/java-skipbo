@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.drawable.CardSlots;
 import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.ReadyToPlayPacket;
 
@@ -16,7 +17,11 @@ import org.newdawn.slick.SlickException;
 public class GameWindow extends BasicGame {
 	
 	Image board;
+	Image cardslot;
+	
 	ArrayList<Image> boards = new ArrayList<Image>();
+	ArrayList<Image> cards = new ArrayList<Image>();
+	
 	boolean gameRunning = false;
 	
 	public GameWindow(String title) {
@@ -25,9 +30,9 @@ public class GameWindow extends BasicGame {
 
 	@Override
 	public void render(GameContainer arg0, Graphics arg1) throws SlickException {
-		board.draw(0,0,800,600);
+		board.draw(0,0,1366,768);
 		if(gameRunning) {
-			//draw stuff
+			CardSlots.draw(cardslot);
 		}
 	}
 
@@ -36,8 +41,15 @@ public class GameWindow extends BasicGame {
 		game.setAlwaysRender(true);
 		game.setTargetFrameRate(60);
 		
+		cardslot = new Image("gfx/cards/slot.png");
+		
 		boards.add(new Image("gfx/boards/waiting.png"));
 		boards.add(new Image("gfx/boards/1v1.png"));
+		
+		for(int i = 0; i <= 0; i++){
+			Client.log("loaded card "+i);
+			cards.add(new Image("gfx/cards/"+i+".png"));
+		}
 		
 		board = boards.get(0);
 		
@@ -61,6 +73,8 @@ public class GameWindow extends BasicGame {
 		}
 		
 		board = boards.get(boardid);
+		
+		gameRunning = true;
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class Client {
 		game = new GameWindow("Java Skip-Bo");
 		final AppGameContainer app = new AppGameContainer(game);
 
-		app.setDisplayMode(800, 600, false);
+		app.setDisplayMode(1366, 768, false);
 
 		Thread t = new Thread(new Runnable() {
 			@Override

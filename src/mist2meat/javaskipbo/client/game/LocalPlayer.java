@@ -6,6 +6,7 @@ public class LocalPlayer {
 
 	public static Card deckCard;
 	public static byte id;
+	public static String name;
 	
 	public static void setDeckCard(Card card) {
 		deckCard = card;
