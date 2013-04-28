@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.popups.EnterNamePopup;
 import mist2meat.javaskipbo.client.popups.JoinServerPopup;
-import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.JoinServerPacket;
 import mist2meat.javaskipbo.network.client.PingServerPacket;
 
@@ -36,7 +35,6 @@ public class Client {
 		if(Main.isHosting()){
 			try {
 				joinServer("127.0.0.1");
-				Main.client.beginGame();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}

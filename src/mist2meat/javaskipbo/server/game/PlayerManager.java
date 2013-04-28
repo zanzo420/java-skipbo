@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.server.Server;
-import mist2meat.javaskipbo.server.ServerEvents;
 
 
 public class PlayerManager {
@@ -24,11 +23,6 @@ public class PlayerManager {
 			players.add(ply);
 			Server.log("Login succeeded!");
 			Server.log("Playercount: "+players.size()+"/"+maxplayers);
-			
-			Server.log(""+ServerEvents.numresponses+"/"+maxplayers);
-			if(players.size() >= maxplayers){
-				ServerEvents.beginGame();
-			}
 			
 			return ServerLoginResponse.LOGIN_SUCCESS;
 		}

@@ -1,7 +1,11 @@
 package mist2meat.javaskipbo.client;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.enums.GameMode;
+import mist2meat.javaskipbo.network.client.ReadyToPlayPacket;
 
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
@@ -12,6 +16,7 @@ import org.newdawn.slick.SlickException;
 public class GameWindow extends BasicGame {
 	
 	Image board;
+	ArrayList<Image> boards = new ArrayList<Image>();
 	boolean gameRunning = false;
 	
 	public GameWindow(String title) {
@@ -31,27 +36,31 @@ public class GameWindow extends BasicGame {
 		game.setAlwaysRender(true);
 		game.setTargetFrameRate(60);
 		
-		board = new Image("gfx/boards/waiting.png");
+		boards.add(new Image("gfx/boards/waiting.png"));
+		boards.add(new Image("gfx/boards/1v1.png"));
+		
+		board = boards.get(0);
+		
+		try {
+			new ReadyToPlayPacket(ClientListener.socket,Main.client.getServerAddress(),3625).send();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void prepareGame() {
-//		try {
-//			String mode;
-//			
-//			switch(Main.getGamemode()){
-//				case GameMode.GAME_1VS1:
-//					mode = "1v1";
-//					break;
-//				default:
-//					mode= "waiting";
-//					break;
-//			}
-//			
-//			board.destroy();
-//			board = new Image("gfx/boards/"+mode+".png");
-//		} catch (SlickException e) {
-//			e.printStackTrace();
-//		}
+		int boardid = 0;
+		
+		switch(Main.getGamemode()){
+			case GameMode.GAME_1VS1:
+				boardid = 1;
+				break;
+			default:
+				boardid = 0;
+				break;
+		}
+		
+		board = boards.get(boardid);
 	}
 
 	@Override

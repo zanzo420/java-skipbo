@@ -24,6 +24,9 @@ public class ServerPacketHandler {
 			case PacketType.PING:
 				ServerEvents.ping(pack.getPacket().getAddress(),pack.getPacket().getPort());
 				break;
+			case PacketType.READY_TO_PLAY:
+				ServerEvents.playerReady(pack.readByte());
+				break;
 			default:
 				Server.log("Unknown packet type: "+type);
 				break;

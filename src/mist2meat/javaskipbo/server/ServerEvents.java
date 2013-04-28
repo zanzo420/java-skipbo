@@ -27,6 +27,16 @@ public class ServerEvents {
 		resppack.send();
 	}
 	
+	public static void playerReady(byte id) {
+		Player ply = PlayerManager.players.get(id);
+		Server.log(ply.getName()+" is ready!");
+		numresponses++;
+		if(numresponses >= PlayerManager.maxplayers){
+			Server.log("Game can start now!");
+			ServerEvents.beginGame();
+		}
+	}
+	
 	public static void ping(InetAddress addr, int port) throws IOException {
 		new PongClientPacket(ServerListener.socket,addr,port).send();
 	}
