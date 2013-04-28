@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.enums.GameMode;
-import mist2meat.javaskipbo.game.Card;
 import mist2meat.javaskipbo.server.Server;
 
 public class Game {

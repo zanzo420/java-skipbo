@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import mist2meat.javaskipbo.game.Card;
 import mist2meat.javaskipbo.network.SendablePacket;
 
 public class Player {

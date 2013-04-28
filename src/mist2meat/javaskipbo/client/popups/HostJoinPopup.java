@@ -18,7 +18,7 @@ public class HostJoinPopup extends JFrame {
 		setTitle("Host or Join");
 		
 		setLocationRelativeTo(null);
-		setSize(215, 225); //TODO: perfect later
+		setSize(206, 228);
 		setLayout(null);
 		setResizable(false);
 		

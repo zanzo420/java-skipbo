@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.Main;
-import mist2meat.javaskipbo.client.drawable.CardSlots;
+import mist2meat.javaskipbo.client.drawable.cardlayout.Layout;
+import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1;
 import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.ReadyToPlayPacket;
 
@@ -16,37 +17,32 @@ import org.newdawn.slick.SlickException;
 
 public class GameWindow extends BasicGame {
 	
-	Image board;
-	Image cardslot;
+	private Image board;
 	
-	ArrayList<Image> boards = new ArrayList<Image>();
-	ArrayList<Image> cards = new ArrayList<Image>();
+	public static Layout curLayout;
+	public static Image cardSlotImage;
+	
+	private ArrayList<Image> boards = new ArrayList<Image>();
+	
+	public static ArrayList<Image> cards = new ArrayList<Image>();
 	
 	boolean gameRunning = false;
 	
 	public GameWindow(String title) {
 		super(title);
 	}
-
-	@Override
-	public void render(GameContainer arg0, Graphics arg1) throws SlickException {
-		board.draw(0,0,1366,768);
-		if(gameRunning) {
-			CardSlots.draw(cardslot);
-		}
-	}
-
+	
 	@Override
 	public void init(GameContainer game) throws SlickException {
 		game.setAlwaysRender(true);
 		game.setTargetFrameRate(60);
 		
-		cardslot = new Image("gfx/cards/slot.png");
-		
 		boards.add(new Image("gfx/boards/waiting.png"));
 		boards.add(new Image("gfx/boards/1v1.png"));
 		
-		for(int i = 0; i <= 0; i++){
+		cardSlotImage = new Image("gfx/cards/slot.png");
+		
+		for(int i = 0; i <= 13; i++){
 			Client.log("loaded card "+i);
 			cards.add(new Image("gfx/cards/"+i+".png"));
 		}
@@ -59,27 +55,40 @@ public class GameWindow extends BasicGame {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public void render(GameContainer container, Graphics graphics) throws SlickException {
+		board.draw(0,0,container.getWidth(),container.getHeight());
+		if(gameRunning) {
+			curLayout.drawCardSlots();
+		}
+	}
+
+	@Override
+	public void update(GameContainer container, int delta) throws SlickException {
+		if(gameRunning) {
+			if(curLayout.changed(container.getWidth(),container.getHeight())){
+				curLayout.update(container.getWidth(),container.getHeight());
+			}
+		}
+	}
+
 	public void prepareGame() {
-		int boardid = 0;
+		int boardid;
 		
 		switch(Main.getGamemode()){
 			case GameMode.GAME_1VS1:
 				boardid = 1;
+				curLayout = new Layout_1v1();
 				break;
 			default:
 				boardid = 0;
 				break;
 		}
 		
+		curLayout.build();
 		board = boards.get(boardid);
 		
 		gameRunning = true;
 	}
-
-	@Override
-	public void update(GameContainer container, int delta) throws SlickException {
-		// TODO Auto-generated method stub
-	}
-
 }

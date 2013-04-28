@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 
 import mist2meat.javaskipbo.enums.PacketType;
 import mist2meat.javaskipbo.network.ReceivedPacket;
+import mist2meat.javaskipbo.client.game.PlayerManager;
 
 public class ClientPacketHandler {
 
@@ -26,7 +27,14 @@ public class ClientPacketHandler {
 				ClientEvents.serverLoginResponse(pack.readByte(),pack.readByte());
 				break;
 			case PacketType.GAME_BEGIN:
-				ClientEvents.beginGame(pack.readByte());
+				byte gamemode = pack.readByte();
+				
+				byte playercount = pack.readByte();
+				for(int i = 0; i < playercount; i++){
+					PlayerManager.newPlayer(pack.readByte(),pack.readString());
+				}
+				
+				ClientEvents.beginGame(gamemode);
 				break;
 			default:
 				Client.log("Unknown packet type: "+type);
