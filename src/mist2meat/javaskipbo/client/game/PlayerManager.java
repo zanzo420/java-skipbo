@@ -18,4 +18,13 @@ public class PlayerManager {
 			players.add(p);
 		}
 	}
+	
+	public static Player getPlayerByID(byte id) {
+		for(Player p : players){
+			if(id == p.id){
+				return p;
+			}
+		}
+		return null;
+	}
 }

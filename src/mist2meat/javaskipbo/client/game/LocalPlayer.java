@@ -11,8 +11,8 @@ public class LocalPlayer {
 	public static byte id;
 	public static String name;
 	
-	public static void setDeckSlot(int id, CardSlot slot) {
-		deckslots.set(id, slot);
+	public static void addDeckSlot(CardSlot slot) {
+		deckslots.add(slot);
 	}
 	
 	public static void setDeckCard(int deckid, int card) {

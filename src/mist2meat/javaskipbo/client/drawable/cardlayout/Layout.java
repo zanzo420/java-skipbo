@@ -14,8 +14,8 @@ public class Layout {
 	float xscale = 1;
 	float yscale = 1;
 	
-	float cardWidth = 100;
-	float cardHeight = 160;
+	float cardWidth = 90;
+	float cardHeight = 150;
 	
 	public void drawCardSlots() {
 		for(CardSlot slot : cardslots) {
@@ -62,7 +62,7 @@ public class Layout {
 	}
 	
 	public void build() {
-		// override this! :D
+		//TODO: build middle decks
 	}
 
 	public boolean changed(int width, int height) {

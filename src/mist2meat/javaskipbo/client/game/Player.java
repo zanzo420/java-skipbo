@@ -20,7 +20,7 @@ public class Player {
 		deckslots.get(deckid).setCard(new Card(card));
 	}
 	
-	public void setDeckSlot(int id, CardSlot slot) {
-		deckslots.set(id, slot);
+	public void addDeckSlot(CardSlot slot) {
+		deckslots.add(slot);
 	}
 }
