@@ -18,7 +18,12 @@ public class Main {
 	public static Server server;
 	public static Client client;
 	
+	public static int scrw,scrh;
+	
 	public static void main(String[] args) {
+		scrw = 800;
+		scrh = 600;
+		
 		client = new Client();
 		client.getListener().setPassive(false);
 		new HostJoinPopup();

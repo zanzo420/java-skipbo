@@ -106,7 +106,7 @@ public class Client {
 		game = new GameWindow("Java Skip-Bo");
 		final AppGameContainer app = new AppGameContainer(game);
 
-		app.setDisplayMode(800, 600, false);
+		app.setDisplayMode(Main.scrw, Main.scrh, false);
 		app.setResizable(true);
 
 		Thread t = new Thread(new Runnable() {
