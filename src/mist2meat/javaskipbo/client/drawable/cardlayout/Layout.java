@@ -3,6 +3,7 @@ package mist2meat.javaskipbo.client.drawable.cardlayout;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
 import mist2meat.javaskipbo.client.game.Game;
 
@@ -84,6 +85,8 @@ public class Layout {
 		ypos += (getCardHeight()/2)-(getCardWidth()/2);
 		
 		slot = new CardSlot(xpos,ypos,true);
+		slot.setCard(new Card(0));
+		
 		Game.deck = slot;
 		addSlot(slot);
 	}

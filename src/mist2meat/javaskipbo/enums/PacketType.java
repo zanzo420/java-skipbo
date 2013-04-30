@@ -12,4 +12,6 @@ public class PacketType {
 	public static final byte READY_TO_PLAY = 5;
 	public static final byte GAME_BEGIN = 6;
 	
+	public static final byte CARD_OPERATION = 7;
+	
 }

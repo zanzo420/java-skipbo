@@ -1,9 +1,12 @@
 package mist2meat.javaskipbo.server.game;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
+import mist2meat.javaskipbo.network.SendablePacket;
+import mist2meat.javaskipbo.network.server.CardOperationPacket;
 import mist2meat.javaskipbo.server.Server;
 
 
@@ -48,5 +51,19 @@ public class PlayerManager {
 			}
 		}
 		return false;
+	}
+	
+	public static void broadcastPacket(SendablePacket pack) throws IOException {
+		for(Player pl : PlayerManager.players){
+			pl.sendPacket(pack);
+		}
+	}
+
+	public static void broadcastPacketExcept(byte id, CardOperationPacket pack) throws IOException {
+		for(Player pl : PlayerManager.players){
+			if(pl.getID() != id) {
+				pl.sendPacket(pack);
+			}
+		}
 	}
 }

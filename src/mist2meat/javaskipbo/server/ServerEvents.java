@@ -43,10 +43,7 @@ public class ServerEvents {
 	
 	public static void beginGame() {
 		try {
-			BeginGamePacket pack = new BeginGamePacket(ServerListener.socket);
-			for(Player pl : PlayerManager.players){
-				pl.sendPacket(pack);
-			}
+			PlayerManager.broadcastPacket(new BeginGamePacket(ServerListener.socket));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

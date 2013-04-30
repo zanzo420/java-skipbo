@@ -19,6 +19,8 @@ public class Game {
 	}
 
 	public void setUpGame() {
+		Server.log("Dealing cards");
+		
 		deck = new ArrayList<Card>();
 		
 		for(int i = 1; i <= 12; i++){
@@ -35,13 +37,18 @@ public class Game {
 		
 		int cards = (Main.getGamemode() == GameMode.GAME_2VS2 ? 15 : 20);
 		
-		for(Player pl : PlayerManager.players){
-			for(int i = 0; i < cards; i++){
-				pl.addCardtoDeck(deck.get(deck.size()-1));
+		for(int i = 1; i <= cards; i++){
+			for(Player pl : PlayerManager.players){
+				pl.addCardtoDeck(deck.get(deck.size()-1),i != cards);
 				deck.remove(deck.size()-1);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		
-		Server.log("Cards dealed");
+		}		
+		Server.log("Cards dealt");
 	}
+	
 }

@@ -17,22 +17,26 @@ public class CardSlot {
 	
 	public CardSlot(float x, float y) {
 		img = GameWindow.cardSlotImage;
-		setPos(x,y);
 		xpos = x;
 		ypos = y;
+		setPos(x,y);
 		setRotated(false);
 	}
 	
 	public CardSlot(float x, float y, boolean rotated) {
 		img = GameWindow.cardSlotImage;
-		setPos(x,y);
 		xpos = x;
 		ypos = y;
+		setPos(x,y);
 		setRotated(rotated);
 	}
 	
 	public void setCard(Card card) {
 		this.card = card;
+		
+		setPos(x,y); // update
+		setSize(w,h);
+		setRotated(rotated);
 	}
 	
 	public void draw() {
@@ -42,6 +46,10 @@ public class CardSlot {
 		}
 		img.draw(x ,y, w, h);
 		img.setRotation(0);
+		
+		if(card != null){
+			card.draw();
+		}
 	}
 	
 	public void setPos(float x, float y) {
@@ -82,5 +90,8 @@ public class CardSlot {
 	
 	public void setRotated(boolean rot) {
 		this.rotated = rot;
+		if(card != null){
+			card.setRotated(rot);
+		}
 	}
 }

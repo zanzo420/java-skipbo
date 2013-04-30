@@ -36,6 +36,9 @@ public class ClientPacketHandler {
 				
 				ClientEvents.beginGame(gamemode);
 				break;
+			case PacketType.CARD_OPERATION:
+				ClientEvents.drawCard(pack);
+				break;
 			default:
 				Client.log("Unknown packet type: "+type);
 				break;

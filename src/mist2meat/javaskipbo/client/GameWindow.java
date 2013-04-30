@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.drawable.AnimatedCard;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1;
 import mist2meat.javaskipbo.enums.GameMode;
@@ -61,6 +62,7 @@ public class GameWindow extends BasicGame {
 		board.draw(0,0,container.getWidth(),container.getHeight());
 		if(gameRunning) {
 			curLayout.drawCardSlots();
+			AnimatedCard.drawAnimations();
 		}
 	}
 
@@ -70,6 +72,7 @@ public class GameWindow extends BasicGame {
 			if(curLayout.changed(container.getWidth(),container.getHeight())){
 				curLayout.update(container.getWidth(),container.getHeight());
 			}
+			AnimatedCard.updateAnimations();
 		}
 	}
 
