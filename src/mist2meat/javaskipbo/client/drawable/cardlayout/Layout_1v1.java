@@ -42,6 +42,16 @@ public class Layout_1v1 extends Layout {
 			addSlot(slot);
 		}
 		
+		//LocalPlayer hand slots
+		xpos = gap;
+		ypos = 350;
+		for(int i = 0; i < 5; i++){
+			slot = new CardSlot(xpos,ypos+(i*30));
+			slot.setHidden(true);
+			LocalPlayer.addHandSlot(slot);
+			addSlot(slot);
+		}
+		
 		//Player 2 slots
 		Player player = PlayerManager.players.get(0);
 		

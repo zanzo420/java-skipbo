@@ -13,6 +13,7 @@ public class CardSlot {
 	float x,y,w,h; // Draw pos
 	float xpos,ypos; // actual pos
 	
+	boolean hidden = false;
 	boolean rotated;
 	
 	public CardSlot(float x, float y) {
@@ -39,13 +40,19 @@ public class CardSlot {
 		setRotated(rotated);
 	}
 	
+	public void setHidden(boolean hide) {
+		hidden = hide;
+	}
+	
 	public void draw() {
-		if(rotated){
-			img.setCenterOfRotation(0, 0);
-			img.setRotation(90);
+		if(!hidden){
+			if(rotated){
+				img.setCenterOfRotation(0, 0);
+				img.setRotation(90);
+			}
+			img.draw(x ,y, w, h);
+			img.setRotation(0);
 		}
-		img.draw(x ,y, w, h);
-		img.setRotation(0);
 		
 		if(card != null){
 			card.draw();
@@ -93,5 +100,9 @@ public class CardSlot {
 		if(card != null){
 			card.setRotated(rot);
 		}
+	}
+	
+	public boolean hasCard() {
+		return !(this.card == null);
 	}
 }

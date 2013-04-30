@@ -52,7 +52,7 @@ public class ClientEvents {
 		Main.client.prepareGame();
 	}
 
-	public static void drawCard(ReceivedPacket pack) throws IOException {
+	public static void cardOperation(ReceivedPacket pack) throws IOException {
 		byte operation = pack.readByte();
 		switch(operation){
 			case CardOperation.DRAW_FROM_DECK:
@@ -70,6 +70,11 @@ public class ClientEvents {
 				}
 				
 				new AnimatedCard(Game.deck,toslot,cardid);
+				break;
+			case CardOperation.DRAW_TO_HAND:
+				byte card = pack.readByte();
+				
+				LocalPlayer.addToHand(card);
 				break;
 			default:
 				Client.log("Unknown card operation: "+operation);

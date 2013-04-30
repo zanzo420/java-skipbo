@@ -44,6 +44,15 @@ public class PlayerManager {
 		return null;
 	}
 	
+	public static Player getPlayerByID(byte id) {
+		for(Player ply : players) {
+			if(ply.getID() == id){
+				return ply;
+			}
+		}
+		return null;
+	}
+	
 	private static boolean isNameTaken(String name) {
 		for(Player ply : players) {
 			if(ply.getName().equalsIgnoreCase(name)){

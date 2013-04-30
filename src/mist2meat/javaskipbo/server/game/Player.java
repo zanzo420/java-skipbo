@@ -19,6 +19,7 @@ public class Player {
 	private InetAddress ip;
 	private int port;
 	
+	private ArrayList<Card> hand = new ArrayList<Card>();
 	private ArrayList<Card> deck = new ArrayList<Card>();
 	private Map<Integer, ArrayList<Card>> freedecks = new HashMap<Integer, ArrayList<Card>>();
 	
@@ -66,5 +67,24 @@ public class Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void addCardToHand(Card card) {
+		hand.add(card);
+		
+		try {
+			CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
+			pack.setOperation(CardOperation.DRAW_TO_HAND);
+			pack.writeByte(card.getNum());
+			
+			sendPacket(pack);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Card> getHand() {
+		return hand;
 	}
 }
