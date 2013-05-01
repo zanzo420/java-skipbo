@@ -70,10 +70,14 @@ public class Layout {
 		
 		CardSlot slot;
 		
-		for(int i = 1; i <= 4; i++){
+		for(int i = 0; i < 4; i++){
 			slot = new CardSlot(xpos,ypos);
 			Game.middleDecks.add(slot);
 			addSlot(slot);
+			slot.setCanTouch(false);
+			
+			slot.setOwner((byte)100);
+			slot.setDeckID((byte)i);
 			
 			xpos += getCardWidth();
 			xpos += 10;
@@ -89,6 +93,10 @@ public class Layout {
 		
 		Game.deck = slot;
 		addSlot(slot);
+		slot.setCanTouch(false);
+		
+		slot.setOwner((byte)100);
+		slot.setDeckID((byte)5);
 	}
 
 	public boolean changed(int width, int height) {
@@ -98,4 +106,25 @@ public class Layout {
 		return true;
 	}
 
+	public ArrayList<CardSlot> getSlotsAt(int x, int y) {
+		ArrayList<CardSlot> list = new ArrayList<CardSlot>();
+		
+		for(CardSlot slot : cardslots) {
+			if(slot.getRotated()){
+				if(x <= slot.getX() && y >= slot.getY()){
+					if(x >= slot.getX()-getCardHeight() && y <= slot.getY()+getCardWidth()){
+						list.add(slot);
+					}
+				}
+			}else{
+				if(x >= slot.getX() && y >= slot.getY()){
+					if(x <= slot.getX()+getCardWidth() && y <= slot.getY()+getCardHeight()){
+						list.add(slot);
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
 }

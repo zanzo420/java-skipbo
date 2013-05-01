@@ -27,6 +27,15 @@ public class ServerPacketHandler {
 			case PacketType.READY_TO_PLAY:
 				ServerEvents.playerReady(pack.readByte());
 				break;
+			case PacketType.MOVE_CARD:
+				byte fromwho = pack.readByte();
+				byte fromdeckid = pack.readByte();
+				byte cardnum = pack.readByte();
+				byte towho = pack.readByte();
+				byte todeckid = pack.readByte();
+				
+				ServerEvents.playerMoveCard(fromwho, fromdeckid, cardnum, towho, todeckid);
+				break;
 			default:
 				Server.log("Unknown packet type: "+type);
 				break;

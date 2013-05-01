@@ -61,12 +61,14 @@ public class Layout_1v1 extends Layout {
 		slot = new CardSlot(xpos,ypos+(ch/2)-(cw/2),true);
 		player.addDeckSlot(slot);
 		addSlot(slot);
+		slot.setCanTouch(false);
 		
 		xpos -= gap+ch+cw;
 		
 		slot = new CardSlot(xpos,ypos);
 		player.addDeckSlot(slot);
 		addSlot(slot);
+		slot.setCanTouch(false);
 		
 		for(int i = 1; i < 4; i++){
 			xpos -= cw+gap;
@@ -74,6 +76,7 @@ public class Layout_1v1 extends Layout {
 			slot = new CardSlot(xpos,ypos);
 			player.addDeckSlot(slot);
 			addSlot(slot);
+			slot.setCanTouch(false);
 		}
 	}
 }

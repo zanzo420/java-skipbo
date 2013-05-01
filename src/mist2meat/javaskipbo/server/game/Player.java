@@ -9,6 +9,7 @@ import java.util.Map;
 import mist2meat.javaskipbo.enums.CardOperation;
 import mist2meat.javaskipbo.network.SendablePacket;
 import mist2meat.javaskipbo.network.server.CardOperationPacket;
+import mist2meat.javaskipbo.server.Server;
 import mist2meat.javaskipbo.server.ServerListener;
 
 public class Player {
@@ -19,7 +20,7 @@ public class Player {
 	private InetAddress ip;
 	private int port;
 	
-	private ArrayList<Card> hand = new ArrayList<Card>();
+	private Map<Integer,Card> hand = new HashMap<Integer,Card>();
 	private ArrayList<Card> deck = new ArrayList<Card>();
 	private Map<Integer, ArrayList<Card>> freedecks = new HashMap<Integer, ArrayList<Card>>();
 	
@@ -28,6 +29,14 @@ public class Player {
 		name = nam;
 		ip = host;
 		port = prt;
+		
+		for(int i2 = 0; i2 <= 4; i2++){
+			hand.put(i2, null);
+		}
+		
+		for(int i3 = 1; i3 <= 4; i3++){
+			freedecks.put(i3, new ArrayList<Card>());
+		}
 	}
 	
 	public byte getID(){
@@ -64,27 +73,44 @@ public class Player {
 			
 			PlayerManager.broadcastPacket(pack);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public void addCardToHand(Card card) {
-		hand.add(card);
+		int slot = 0;
+		for(Map.Entry<Integer,Card> handcard : hand.entrySet()){
+			if(handcard.getValue() == null){
+				slot = handcard.getKey();
+				break;
+			}
+		}
+		Server.log(getName()+": adding card "+card.getNum()+" to hand slot "+slot);
+		hand.put(slot, card);
 		
 		try {
 			CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
 			pack.setOperation(CardOperation.DRAW_TO_HAND);
+			pack.writeByte((byte)slot);
 			pack.writeByte(card.getNum());
 			
 			sendPacket(pack);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public ArrayList<Card> getHand() {
+	public Map<Integer,Card> getHand() {
 		return hand;
+	}
+
+	public int getHandCardNum() {
+		int num = 0;
+		for(Map.Entry<Integer,Card> handcard : hand.entrySet()){
+			if(handcard.getValue() != null){
+				num++;
+			}
+		}
+		return num;
 	}
 }

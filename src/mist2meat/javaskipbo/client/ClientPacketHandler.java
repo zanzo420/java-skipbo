@@ -39,6 +39,9 @@ public class ClientPacketHandler {
 			case PacketType.CARD_OPERATION:
 				ClientEvents.cardOperation(pack);
 				break;
+			case PacketType.PLAYERS_TURN:
+				ClientEvents.playersTurn(pack.readByte());
+				break;
 			default:
 				Client.log("Unknown packet type: "+type);
 				break;

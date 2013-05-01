@@ -21,6 +21,9 @@ public class Player {
 	}
 	
 	public void addDeckSlot(CardSlot slot) {
+		slot.setDeckID((byte)deckslots.size());
 		deckslots.add(slot);
+		
+		slot.setOwner(id);
 	}
 }

@@ -7,6 +7,7 @@ import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.drawable.AnimatedCard;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1;
+import mist2meat.javaskipbo.client.game.DragNDropManager;
 import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.ReadyToPlayPacket;
 
@@ -27,7 +28,7 @@ public class GameWindow extends BasicGame {
 	
 	public static ArrayList<Image> cards = new ArrayList<Image>();
 	
-	boolean gameRunning = false;
+	public static boolean gameRunning = false;
 	
 	public GameWindow(String title) {
 		super(title);
@@ -55,6 +56,8 @@ public class GameWindow extends BasicGame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		DragNDropManager.init(game.getInput());
 	}
 
 	@Override
@@ -63,6 +66,7 @@ public class GameWindow extends BasicGame {
 		if(gameRunning) {
 			curLayout.drawCardSlots();
 			AnimatedCard.drawAnimations();
+			DragNDropManager.draw();
 		}
 	}
 
@@ -73,6 +77,7 @@ public class GameWindow extends BasicGame {
 				curLayout.update(container.getWidth(),container.getHeight());
 			}
 			AnimatedCard.updateAnimations();
+			DragNDropManager.update();
 		}
 	}
 

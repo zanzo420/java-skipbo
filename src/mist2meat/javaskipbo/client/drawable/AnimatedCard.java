@@ -1,6 +1,7 @@
 package mist2meat.javaskipbo.client.drawable;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import mist2meat.javaskipbo.client.GameWindow;
 
@@ -20,6 +21,7 @@ public class AnimatedCard {
 	float rot,torot;
 	
 	byte id;
+	byte wildcard = 0;
 	
 	public boolean finished = false;
 	
@@ -42,6 +44,26 @@ public class AnimatedCard {
 		animations.add(this);
 	}
 	
+	public AnimatedCard(CardSlot fromslot, CardSlot toslot, byte id, byte wildcard) {
+		x = fromslot.getX();
+		y = fromslot.getY();
+		
+		rot = fromslot.rotated ? 90 : 0;
+		
+		tox = toslot.getX();
+		toy = toslot.getY();
+		
+		torot = toslot.rotated ? 90 : 0;
+		
+		this.toslot = toslot;
+		this.id = id;
+		this.wildcard = wildcard;
+		
+		img = GameWindow.cards.get(id);
+		
+		animations.add(this);
+	}
+
 	public void draw() {
 		float cw = GameWindow.curLayout.getCardWidth();
 		float ch = GameWindow.curLayout.getCardHeight();
@@ -54,7 +76,11 @@ public class AnimatedCard {
 	
 	public void update() {
 		if(Math.abs(x-tox) < 1f && Math.abs(y-toy) < 1f){
-			toslot.setCard(new Card(id));
+			Card c = new Card(id);
+			if(wildcard > 0){
+				c.setWildNum(wildcard);
+			}
+			toslot.setCard(c);
 			finished = true;
 		}else{			
 			float frames = 10;
@@ -74,21 +100,30 @@ public class AnimatedCard {
 	}
 	
 	public static void drawAnimations() {
-		for(AnimatedCard anim : animations){
-			if(!anim.finished){
-				anim.draw();
+		try{
+			for(AnimatedCard anim : animations){
+				if(!anim.finished){
+					anim.draw();
+				}
 			}
+		} catch (ConcurrentModificationException e) {
+			//fuck you java >:/
 		}
 	}
 	
 	public static void updateAnimations() {
 		ArrayList<AnimatedCard> done = new ArrayList<AnimatedCard>();
 		
-		for(AnimatedCard anim : animations) {
-			anim.update();
-			if(anim.finished){
-				done.add(anim);
+		try{
+			for(AnimatedCard anim : animations) {
+				if(!anim.finished){
+					anim.update();
+				}else{
+					done.add(anim);
+				}
 			}
+		} catch (ConcurrentModificationException e) {
+			//fuck you java >:/
 		}
 		
 		for(AnimatedCard anim : done){

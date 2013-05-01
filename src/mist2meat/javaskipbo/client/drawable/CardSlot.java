@@ -14,7 +14,11 @@ public class CardSlot {
 	float xpos,ypos; // actual pos
 	
 	boolean hidden = false;
+	boolean touchable = true;
 	boolean rotated;
+	
+	byte owner;
+	byte id;
 	
 	public CardSlot(float x, float y) {
 		img = GameWindow.cardSlotImage;
@@ -30,6 +34,22 @@ public class CardSlot {
 		ypos = y;
 		setPos(x,y);
 		setRotated(rotated);
+	}
+	
+	public void setOwner(byte own){
+		owner = own;
+	}
+	
+	public void setDeckID(byte i){
+		id = i;
+	}
+	
+	public byte getOwner() {
+		return owner;
+	}
+	
+	public byte getDeckID() {
+		return id;
 	}
 	
 	public void setCard(Card card) {
@@ -102,7 +122,19 @@ public class CardSlot {
 		}
 	}
 	
+	public Card getCard() {
+		return card;
+	}
+	
 	public boolean hasCard() {
 		return !(this.card == null);
+	}
+	
+	public void setCanTouch(boolean b) {
+		touchable = b;
+	}
+	
+	public boolean canTouch() {
+		return touchable;
 	}
 }

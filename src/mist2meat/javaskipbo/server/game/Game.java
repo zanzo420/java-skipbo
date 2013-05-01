@@ -1,16 +1,20 @@
 package mist2meat.javaskipbo.server.game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.enums.GameMode;
+import mist2meat.javaskipbo.network.server.PlayersTurnPacket;
 import mist2meat.javaskipbo.server.Server;
+import mist2meat.javaskipbo.server.ServerListener;
 
 public class Game {
 	
-	private ArrayList<Card> deck;
-	private byte playersTurn;
+	public ArrayList<Card> deck;
+	public ArrayList<ArrayList<Card>> middleDecks = new ArrayList<ArrayList<Card>>();
+	public byte playersTurn;
 	
 	public Game(){
 		Server.log("Starting game");
@@ -40,6 +44,10 @@ public class Game {
 		}
 		
 		Collections.shuffle(deck);
+		
+		for(int i = 1; i <= 4; i++){
+			middleDecks.add(new ArrayList<Card>());
+		}
 	}
 	
 	private void dealCards() {
@@ -64,15 +72,24 @@ public class Game {
 	private void startTurn(){
 		Player ply = PlayerManager.getPlayerByID(playersTurn);
 		
+		try {
+			PlayersTurnPacket pack = new PlayersTurnPacket(ServerListener.socket);
+			pack.setPlayer(ply);
+			PlayerManager.broadcastPacket(pack);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		Server.log(ply.getName()+"("+playersTurn+")'s turn");
 		
-		ArrayList<Card> hand = ply.getHand();
-		
-		if(hand.size() < 5){
-			int missing = (5-hand.size());
+		int handcards = ply.getHandCardNum();
+		if(handcards < 5){
+			int missing = (5-handcards);
 			for(int i = 1; i <= missing; i++){
-				ply.addCardToHand(deck.get(deck.size()-1));
+				Card card = deck.get(deck.size()-1);
+				ply.addCardToHand(card);
 				deck.remove(deck.size()-1);
+				Server.log("Gave card "+card.getNum());
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
@@ -83,4 +100,13 @@ public class Game {
 		}
 	}
 	
+	public void endTurn() {
+		playersTurn = (byte) ((playersTurn + 1) % PlayerManager.maxplayers);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		startTurn();
+	}
 }
