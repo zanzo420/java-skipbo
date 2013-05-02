@@ -40,7 +40,7 @@ public class Card {
 	
 	public void drawWildCard() {
 		if(!hidden){
-			wildimg.setAlpha(0.2f);
+			wildimg.setAlpha(0.4f);
 			if(rotated){
 				wildimg.setCenterOfRotation(0, 0);
 				wildimg.setRotation(90);
