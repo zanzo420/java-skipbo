@@ -2,6 +2,8 @@ package mist2meat.javaskipbo.client.drawable.cardlayout;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.Graphics;
+
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
@@ -126,5 +128,9 @@ public class Layout {
 		}
 		
 		return list;
+	}
+
+	public void drawPlayerNames(Graphics g) {
+		// override this in the layout
 	}
 }

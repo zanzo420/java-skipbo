@@ -6,6 +6,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import mist2meat.javaskipbo.Main;
+import mist2meat.javaskipbo.client.game.LocalPlayer;
 import mist2meat.javaskipbo.client.popups.EnterNamePopup;
 import mist2meat.javaskipbo.client.popups.JoinServerPopup;
 import mist2meat.javaskipbo.network.client.JoinServerPacket;
@@ -18,7 +19,6 @@ public class Client {
 
 	private ClientListener listener;
 	private InetAddress serveripaddr;
-	public String name;
 	private GameWindow game;
 
 	public Client() {
@@ -31,7 +31,7 @@ public class Client {
 	}
 	
 	public void setName(String nam) {
-		name = nam;
+		LocalPlayer.setName(nam);
 		if(Main.isHosting()){
 			try {
 				joinServer("127.0.0.1");
@@ -56,7 +56,7 @@ public class Client {
 		Client.log("Joining server: "+ip);
 		try {
 			JoinServerPacket p = new JoinServerPacket(ClientListener.socket, getServerAddress(), 3625);
-			p.setName(name);
+			p.setName(LocalPlayer.getName());
 			
 			p.send();
 		} catch (IOException e) {

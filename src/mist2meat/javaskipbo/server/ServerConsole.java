@@ -45,7 +45,7 @@ public class ServerConsole extends JFrame {
 		Calendar cal = Calendar.getInstance();
 	    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	    
-		logbox.setText(logbox.getText()+"["+sdf.format(cal.getTime())+"] "+msg+System.lineSeparator());
+		logbox.setText(logbox.getText()+"["+sdf.format(cal.getTime())+"] "+msg+"\n");
 		logbox.setCaretPosition(logbox.getText().length());
 	}
 }

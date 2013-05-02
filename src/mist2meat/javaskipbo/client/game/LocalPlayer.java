@@ -2,7 +2,6 @@ package mist2meat.javaskipbo.client.game;
 
 import java.util.ArrayList;
 
-import mist2meat.javaskipbo.client.Client;
 import mist2meat.javaskipbo.client.drawable.AnimatedCard;
 import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
@@ -12,9 +11,18 @@ public class LocalPlayer {
 	public static ArrayList<CardSlot> deckslots = new ArrayList<CardSlot>();
 	public static ArrayList<CardSlot> handslots = new ArrayList<CardSlot>();
 	public static byte id;
-	public static String name;
+
+	private static String name;
 	
 	public static boolean myTurn = false;
+	
+	public static String getName() {
+		return name;
+	}
+	
+	public static void setName(String nam) {
+		name = nam;
+	}
 	
 	public static void addHandSlot(CardSlot slot) {
 		slot.setDeckID((byte)(50+handslots.size()));
@@ -24,7 +32,6 @@ public class LocalPlayer {
 	}
 	
 	public static void addToHand(int slotnum, byte card) {
-		Client.log(name+": adding card "+card+" to hand slot "+slotnum);
 		for(CardSlot slot : handslots){
 			if(!slot.hasCard() && slot.getDeckID() == 50+slotnum){
 				new AnimatedCard(Game.deck, slot, card);

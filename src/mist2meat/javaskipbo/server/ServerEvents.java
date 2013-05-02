@@ -7,7 +7,6 @@ import java.util.Collections;
 
 import mist2meat.javaskipbo.enums.CardOperation;
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
-import mist2meat.javaskipbo.network.server.BeginGamePacket;
 import mist2meat.javaskipbo.network.server.CardOperationPacket;
 import mist2meat.javaskipbo.network.server.PongClientPacket;
 import mist2meat.javaskipbo.network.server.ServerLoginResponsePacket;
@@ -47,23 +46,19 @@ public class ServerEvents {
 	}
 	
 	public static void beginGame() {
-		try {
-			PlayerManager.broadcastPacket(new BeginGamePacket(ServerListener.socket));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		Server.currentGame = new Game();
+		Server.currentGame.startGame();
 	}
 
 	public static void playerMoveCard(byte fromwho, byte fromdeckid, byte cardnum, byte towho, byte todeckid) throws IOException {
+		// TODO: Clean this up ALOT!
 		// PLYID 50 = hand
 		// PLYID 100 = middle decks
 		
 		Player fromplayer = PlayerManager.getPlayerByID(fromwho);
 		Server.log(fromplayer.getName()+" wants to move card "+cardnum+" from "+fromdeckid+" to "+towho+","+todeckid);
 		
-		if(towho == 50){ // can't move to a hand slot
+		if(towho >= 50 && towho <= 55){ // can't move to a hand slot
 			return;
 		}
 		
@@ -103,14 +98,35 @@ public class ServerEvents {
 					
 					if(fromdeckid >= 50 && fromdeckid <= 55){
 						fromplayer.getHand().put(fromdeckid-50, null);
+						if(fromplayer.getHandCardNum() == 0){
+							fromplayer.fillHand();
+						}
 					}
 					
 					if(fromdeckid == 0){ //players deck
 						if(fromplayer.getDeck().size() > 0){
 							ArrayList<Card> plydeck = fromplayer.getDeck();
 							if(plydeck.size() > 0){
-								fromplayer.getDeck().remove(plydeck.size()-1);
+								plydeck.remove(plydeck.size()-1);
 								
+								CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
+								pack2.setOperation(CardOperation.SET_CARD);
+								pack2.writeByte(fromwho);
+								pack2.writeByte(fromdeckid);
+								if(plydeck.size() > 0){
+									pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
+									PlayerManager.broadcastPacket(pack2);
+								}else{
+									PlayerManager.broadcastPacket(pack2);
+									Server.currentGame.endGame();
+								}
+							}
+						}
+					}else if(fromdeckid >= 1 && fromdeckid <= 4) {
+						ArrayList<Card> plydeck = fromplayer.getFreeDeck(fromdeckid);
+						if(plydeck.size() > 0){
+							plydeck.remove(plydeck.size()-1);
+							if(plydeck.size() > 0){
 								CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
 								pack2.setOperation(CardOperation.SET_CARD);
 								pack2.writeByte(fromwho);
@@ -120,16 +136,15 @@ public class ServerEvents {
 								PlayerManager.broadcastPacket(pack2);
 							}
 						}
-					}else if(fromdeckid >= 1 && fromdeckid <= 4) { // TODO: free decks
-						
 					}
 					
-					if(cardnum == 12) {
+					if(Server.currentGame.middleDecks.get(todeckid).size() == 12) {
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
+						
 						Server.currentGame.deck.addAll(deck);
 						Collections.shuffle(Server.currentGame.deck);
 						
@@ -165,13 +180,16 @@ public class ServerEvents {
 					
 					if(fromdeckid >= 50 && fromdeckid <= 55){
 						fromplayer.getHand().put(fromdeckid-50, null);
+						if(fromplayer.getHandCardNum() == 0){
+							fromplayer.fillHand();
+						}
 					}
 					
 					if(fromdeckid == 0){ // players deck
 						if(fromplayer.getDeck().size() > 0){
 							ArrayList<Card> plydeck = fromplayer.getDeck();
 							if(plydeck.size() > 0){
-								fromplayer.getDeck().remove(plydeck.size()-1);
+								plydeck.remove(plydeck.size()-1);
 								
 								CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
 								pack2.setOperation(CardOperation.SET_CARD);
@@ -182,8 +200,20 @@ public class ServerEvents {
 								PlayerManager.broadcastPacket(pack2);
 							}
 						}
-					}else if(fromdeckid >= 1 && fromdeckid <= 4) { // TODO: free decks
-						
+					}else if(fromdeckid >= 1 && fromdeckid <= 4) {
+						ArrayList<Card> plydeck = fromplayer.getFreeDeck(fromdeckid);
+						if(plydeck.size() > 0){
+							plydeck.remove(plydeck.size()-1);
+							if(plydeck.size() > 0){
+								CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
+								pack2.setOperation(CardOperation.SET_CARD);
+								pack2.writeByte(fromwho);
+								pack2.writeByte(fromdeckid);
+								pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
+								
+								PlayerManager.broadcastPacket(pack2);
+							}
+						}
 					}
 				}
 			}

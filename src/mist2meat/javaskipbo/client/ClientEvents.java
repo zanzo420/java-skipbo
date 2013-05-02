@@ -28,14 +28,13 @@ public class ClientEvents {
 		if (response == ServerLoginResponse.LOGIN_SUCCESS) {
 			Client.log("Login was successfull");
 			LocalPlayer.id = id;
-			Client.log("Got ID: " + id);
 			Main.client.beginGame();
 		} else if (response == ServerLoginResponse.LOGIN_NAME_TAKEN) {
 			Client.log("Login failed: name is in use");
-			new EnterNamePopup(Main.client.name);
+			new EnterNamePopup(LocalPlayer.getName());
 		} else if (response == ServerLoginResponse.LOGIN_SERVER_FULL) {
 			Client.log("Login failed: server is full");
-			new EnterNamePopup(Main.client.name);
+			new EnterNamePopup(LocalPlayer.getName());
 		}
 	}
 
@@ -170,9 +169,10 @@ public class ClientEvents {
 	public static void playersTurn(byte playerid) {
 		if(playerid == LocalPlayer.id){
 			LocalPlayer.myTurn = true;
+			PlayerManager.resetTurn();
 		}else{
 			LocalPlayer.myTurn = false;
-			//TODO: make something to display whose turn it is
+			PlayerManager.getPlayerByID(playerid).setTurn(true);
 		}
 	}
 }

@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import mist2meat.javaskipbo.Main;
-import mist2meat.javaskipbo.enums.GameMode;
+import mist2meat.javaskipbo.network.server.BeginGamePacket;
 import mist2meat.javaskipbo.network.server.PlayersTurnPacket;
 import mist2meat.javaskipbo.server.Server;
 import mist2meat.javaskipbo.server.ServerListener;
@@ -21,11 +20,15 @@ public class Game {
 		
 		setUpGame();
 		
+		try {
+			PlayerManager.broadcastPacket(new BeginGamePacket(ServerListener.socket));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		dealCards();
 		
 		playersTurn = (byte) (Math.random()*PlayerManager.maxplayers);
-		
-		startTurn();
 	}
 
 	public void setUpGame() {
@@ -53,7 +56,7 @@ public class Game {
 	private void dealCards() {
 		Server.log("Dealing cards");
 		
-		int cards = (Main.getGamemode() == GameMode.GAME_2VS2 ? 15 : 20);
+		int cards = 20;
 		
 		for(int i = 1; i <= cards; i++){
 			for(Player pl : PlayerManager.players){
@@ -69,6 +72,14 @@ public class Game {
 		Server.log("Cards dealt");
 	}
 	
+	public void startGame(){
+		startTurn();
+	}
+	
+	public void endGame(){
+		Server.log("Game should end here!");
+	}
+	
 	private void startTurn(){
 		Player ply = PlayerManager.getPlayerByID(playersTurn);
 		
@@ -82,22 +93,7 @@ public class Game {
 		
 		Server.log(ply.getName()+"("+playersTurn+")'s turn");
 		
-		int handcards = ply.getHandCardNum();
-		if(handcards < 5){
-			int missing = (5-handcards);
-			for(int i = 1; i <= missing; i++){
-				Card card = deck.get(deck.size()-1);
-				ply.addCardToHand(card);
-				deck.remove(deck.size()-1);
-				Server.log("Gave card "+card.getNum());
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			Server.log("Gave "+ply.getName()+" "+missing+" hand cards");
-		}
+		ply.fillHand();
 	}
 	
 	public void endTurn() {

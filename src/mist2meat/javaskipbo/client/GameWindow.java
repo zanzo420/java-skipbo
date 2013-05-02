@@ -62,12 +62,16 @@ public class GameWindow extends BasicGame {
 
 	@Override
 	public void render(GameContainer container, Graphics graphics) throws SlickException {
+		graphics.setAntiAlias(true);
 		board.draw(0,0,container.getWidth(),container.getHeight());
 		if(gameRunning) {
 			curLayout.drawCardSlots();
+			curLayout.drawPlayerNames(graphics);
+			
 			AnimatedCard.drawAnimations();
 			DragNDropManager.draw();
 		}
+		graphics.setAntiAlias(false);
 	}
 
 	@Override

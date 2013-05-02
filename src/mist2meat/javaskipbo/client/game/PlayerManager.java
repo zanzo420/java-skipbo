@@ -27,4 +27,10 @@ public class PlayerManager {
 		}
 		return null;
 	}
+
+	public static void resetTurn() {
+		for(Player p : players){
+			p.setTurn(false);
+		}
+	}
 }

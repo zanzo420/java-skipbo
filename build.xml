@@ -11,7 +11,7 @@
 		<mkdir dir="BUILD"/>
 		<mkdir dir="BUILD/classes"/>
 		
-		<javac debug="true" srcdir="src" destdir="BUILD/classes" classpathref="classpath">
+		<javac debug="true" srcdir="src" destdir="BUILD/classes" target="1.6" source="1.6" classpathref="classpath">
 			<classpath>
 				<pathelement path="lib/slick.jar"/>
 				<pathelement path="lib/lwjgl.jar"/>
@@ -26,6 +26,8 @@
             	<attribute name="Class-Path" value="lib/lwjgl.jar lib/lwjgl_util.jar lib/jinput.jar lib/slick.jar"/>
             </manifest>
         </jar>
+		
+		<delete dir="BUILD/classes"/>
 		
 		<copy todir="BUILD">
 			<fileset dir=".">
@@ -45,9 +47,6 @@
 			<fileset dir=".">
 				<include name="BUILD/**"/>
 			</fileset>
-		</zip>
-
-		<delete dir="BUILD/classes"/>
-		
+		</zip>		
 	</target>
 </project>

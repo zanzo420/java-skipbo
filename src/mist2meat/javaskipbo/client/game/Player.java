@@ -9,10 +9,21 @@ public class Player {
 	
 	public ArrayList<CardSlot> deckslots = new ArrayList<CardSlot>();
 	public byte id;
-	public String name;
+	
+	private String name;
+	
+	private boolean turn = false;
 	
 	public Player(byte id, String name) {
 		this.id = id;
+		this.name = name;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public void setName(String name){
 		this.name = name;
 	}
 	
@@ -25,5 +36,13 @@ public class Player {
 		deckslots.add(slot);
 		
 		slot.setOwner(id);
+	}
+
+	public void setTurn(boolean b) {
+		turn = b;
+	}
+	
+	public boolean isMyTurn() {
+		return turn;
 	}
 }

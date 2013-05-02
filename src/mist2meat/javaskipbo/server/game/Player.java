@@ -85,7 +85,6 @@ public class Player {
 				break;
 			}
 		}
-		Server.log(getName()+": adding card "+card.getNum()+" to hand slot "+slot);
 		hand.put(slot, card);
 		
 		try {
@@ -112,5 +111,24 @@ public class Player {
 			}
 		}
 		return num;
+	}
+	
+	public void fillHand() {
+		ArrayList<Card> deck = Server.currentGame.deck;
+		int handcards = getHandCardNum();
+		if(handcards < 5){
+			int missing = (5-handcards);
+			for(int i = 1; i <= missing; i++){
+				Card card = deck.get(deck.size()-1);
+				addCardToHand(card);
+				deck.remove(card);
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			Server.log("Gave "+getName()+" "+missing+" hand cards");
+		}
 	}
 }

@@ -1,5 +1,8 @@
 package mist2meat.javaskipbo.client.drawable.cardlayout;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+
 import mist2meat.javaskipbo.client.drawable.CardSlot;
 import mist2meat.javaskipbo.client.game.LocalPlayer;
 import mist2meat.javaskipbo.client.game.Player;
@@ -78,5 +81,15 @@ public class Layout_1v1 extends Layout {
 			addSlot(slot);
 			slot.setCanTouch(false);
 		}
+	}
+	
+	@Override
+	public void drawPlayerNames(Graphics g) {
+		g.setColor(LocalPlayer.myTurn ? Color.red : Color.white);
+		g.drawString(LocalPlayer.getName(), 160, 570);
+		Player pl = PlayerManager.players.get(0);
+		g.setColor(pl.isMyTurn() ? Color.red : Color.white);
+		g.drawString(pl.getName(), 570, 20);
+		g.setColor(Color.white);
 	}
 }
