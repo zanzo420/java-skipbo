@@ -37,6 +37,7 @@ public class GameWindow extends BasicGame {
 	@Override
 	public void init(GameContainer game) throws SlickException {
 		game.setAlwaysRender(true);
+		game.setClearEachFrame(false);
 		game.setTargetFrameRate(60);
 		
 		boards.add(new Image("gfx/boards/waiting.png"));
@@ -65,6 +66,7 @@ public class GameWindow extends BasicGame {
 		graphics.setAntiAlias(true);
 		board.draw(0,0,container.getWidth(),container.getHeight());
 		if(gameRunning) {
+			graphics.scale(curLayout.xscale, curLayout.yscale);
 			curLayout.drawCardSlots();
 			curLayout.drawPlayerNames(graphics);
 			
@@ -81,7 +83,6 @@ public class GameWindow extends BasicGame {
 				curLayout.update(container.getWidth(),container.getHeight());
 			}
 			AnimatedCard.updateAnimations();
-			DragNDropManager.update();
 		}
 	}
 

@@ -175,4 +175,17 @@ public class ClientEvents {
 			PlayerManager.getPlayerByID(playerid).setTurn(true);
 		}
 	}
+
+	public static void endGame(byte winnerid) {
+		PlayerManager.resetTurn();
+		LocalPlayer.myTurn = false;
+		
+		if(winnerid == LocalPlayer.id){
+			Client.log(LocalPlayer.getName()+" won the game!");
+		}else{
+			Player winner = PlayerManager.getPlayerByID(winnerid);
+			Client.log(winner.getName()+" won the game!");
+		}
+		Client.log("Game over");
+	}
 }

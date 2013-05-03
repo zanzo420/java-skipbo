@@ -117,8 +117,8 @@ public class ServerEvents {
 									pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
 									PlayerManager.broadcastPacket(pack2);
 								}else{
-									PlayerManager.broadcastPacket(pack2);
-									Server.currentGame.endGame();
+									Server.currentGame.endGame(fromplayer);
+									return;
 								}
 							}
 						}
@@ -195,9 +195,13 @@ public class ServerEvents {
 								pack2.setOperation(CardOperation.SET_CARD);
 								pack2.writeByte(fromwho);
 								pack2.writeByte(fromdeckid);
-								pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
-								
-								PlayerManager.broadcastPacket(pack2);
+								if(plydeck.size() > 0){
+									pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
+									PlayerManager.broadcastPacket(pack2);
+								}else{
+									Server.currentGame.endGame(fromplayer);
+									return;
+								}
 							}
 						}
 					}else if(fromdeckid >= 1 && fromdeckid <= 4) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import mist2meat.javaskipbo.network.server.BeginGamePacket;
+import mist2meat.javaskipbo.network.server.EndGamePacket;
 import mist2meat.javaskipbo.network.server.PlayersTurnPacket;
 import mist2meat.javaskipbo.server.Server;
 import mist2meat.javaskipbo.server.ServerListener;
@@ -76,8 +77,15 @@ public class Game {
 		startTurn();
 	}
 	
-	public void endGame(){
-		Server.log("Game should end here!");
+	public void endGame(Player winner) throws IOException{
+		EndGamePacket pack = new EndGamePacket(ServerListener.socket);
+		pack.setWinner(winner);
+		PlayerManager.broadcastPacket(pack);
+		
+		Server.log(winner.getName()+" won the game!");
+		Server.log("Game over!");
+		
+		Server.currentGame = null;
 	}
 	
 	private void startTurn(){

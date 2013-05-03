@@ -1,4 +1,4 @@
-<project name="kitipong" default="build-game" basedir=".">
+<project name="javaskipbo" default="build-game" basedir=".">
 	
 	<path id="classpath">
 		<fileset dir="lib" includes="*.jar"/>

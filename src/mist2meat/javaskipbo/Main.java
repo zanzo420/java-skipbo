@@ -25,8 +25,8 @@ public class Main {
 	public static void main(String[] args) {
 		System.setProperty("org.lwjgl.librarypath", new File("lib/natives").getAbsolutePath());
 		
-		scrw = 800;
-		scrh = 600;
+		scrw = 1024;
+		scrh = 768;
 		
 		client = new Client();
 		client.getListener().setPassive(false);

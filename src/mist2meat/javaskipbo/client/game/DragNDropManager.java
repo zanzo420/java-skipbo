@@ -28,10 +28,6 @@ public class DragNDropManager {
 		}
 	}
 	
-	public static void update() {
-		
-	}
-	
 	public static void init(Input input) {
 		input.addMouseListener(new MouseListener() {
 			@Override
@@ -56,6 +52,8 @@ public class DragNDropManager {
 			@Override
 			public void mouseDragged(int x1, int y1, int x2, int y2) {
 				if(dragging){
+					x2 /= GameWindow.curLayout.xscale;
+					y2 /= GameWindow.curLayout.yscale;
 					dragged.setPos(x2+xoff, y2+yoff);
 				}
 			}
@@ -71,8 +69,8 @@ public class DragNDropManager {
 					if(slot != null){
 						Card card = slot.getCard();
 						
-						xoff = card.getX() - x;
-						yoff = card.getY() - y;
+						xoff = (card.getX()*GameWindow.curLayout.xscale) - x;
+						yoff = (card.getY()*GameWindow.curLayout.yscale) - y;
 						
 						dragging = true;
 						dragged = card;

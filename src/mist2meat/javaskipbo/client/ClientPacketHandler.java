@@ -36,6 +36,9 @@ public class ClientPacketHandler {
 				
 				ClientEvents.beginGame(gamemode);
 				break;
+			case PacketType.GAME_END:
+				ClientEvents.endGame(pack.readByte());
+				break;
 			case PacketType.CARD_OPERATION:
 				ClientEvents.cardOperation(pack);
 				break;

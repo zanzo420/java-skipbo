@@ -3,6 +3,7 @@ package mist2meat.javaskipbo.client.drawable.cardlayout;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
 import mist2meat.javaskipbo.client.game.LocalPlayer;
 import mist2meat.javaskipbo.client.game.Player;
@@ -24,8 +25,8 @@ public class Layout_1v1 extends Layout {
 		CardSlot slot;
 		
 		//LocalPlayer slots
-		xpos = 300;
-		ypos = 600-ch-gap;
+		xpos = (Main.scrw/2)-(gap*2.5f)-(cw*2);
+		ypos = Main.scrh-ch-gap;
 		
 		slot = new CardSlot(xpos,ypos+(ch/2)-(cw/2),true);
 		LocalPlayer.addDeckSlot(slot);
@@ -47,7 +48,7 @@ public class Layout_1v1 extends Layout {
 		
 		//LocalPlayer hand slots
 		xpos = gap;
-		ypos = 350;
+		ypos = Main.scrh-250;
 		for(int i = 0; i < 5; i++){
 			slot = new CardSlot(xpos,ypos+(i*30));
 			slot.setHidden(true);
@@ -58,7 +59,7 @@ public class Layout_1v1 extends Layout {
 		//Player 2 slots
 		Player player = PlayerManager.players.get(0);
 		
-		xpos = 300+(gap*4)+(cw*4);
+		xpos = (Main.scrw/2)+(gap*4)+(cw*3.5f);
 		ypos = gap;
 		
 		slot = new CardSlot(xpos,ypos+(ch/2)-(cw/2),true);
@@ -86,10 +87,12 @@ public class Layout_1v1 extends Layout {
 	@Override
 	public void drawPlayerNames(Graphics g) {
 		g.setColor(LocalPlayer.myTurn ? Color.red : Color.white);
-		g.drawString(LocalPlayer.getName(), 160, 570);
+		g.drawString(LocalPlayer.getName(), (Main.scrw/2)-35-getCardWidth()*3-getCardHeight()*0.33f, Main.scrh-38);
 		Player pl = PlayerManager.players.get(0);
+		
 		g.setColor(pl.isMyTurn() ? Color.red : Color.white);
-		g.drawString(pl.getName(), 570, 20);
+		g.drawString(pl.getName(), (Main.scrw/2)+40+getCardWidth()*3.5f-getCardHeight(), 20);
+		
 		g.setColor(Color.white);
 	}
 }

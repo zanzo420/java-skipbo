@@ -16,8 +16,8 @@ public class Layout {
 	float w = 0;
 	float h = 0;
 	
-	float xscale = 1;
-	float yscale = 1;
+	public float xscale = 1;
+	public float yscale = 1;
 	
 	float cardWidth = 90;
 	float cardHeight = 150;
@@ -36,30 +36,17 @@ public class Layout {
 		yscale = height / Main.scrh;
 		
 		for(CardSlot slot : cardslots) {
-			if(slot.getRotated()){
-				slot.setPos(slot.getXPos() * xscale, slot.getYPos() * yscale);
-				slot.setSize(getRotatedCardWidth(), getRotatedCardHeight());
-			}else{
-				slot.setPos(slot.getXPos() * xscale, slot.getYPos() * yscale);
-				slot.setSize(getCardWidth(), getCardHeight());		
-			}
+			slot.setPos(slot.getXPos(), slot.getYPos());
+			slot.setSize(getCardWidth(), getCardHeight());
 		}
 	}
 	
 	public float getCardWidth() {
-		return cardWidth * xscale;
+		return cardWidth;
 	}
 	
 	public float getCardHeight() {
-		return cardHeight * yscale;
-	}
-	
-	public float getRotatedCardWidth() {
-		return cardWidth * yscale;
-	}
-	
-	public float getRotatedCardHeight() {
-		return cardHeight * xscale;
+		return cardHeight;
 	}
 	
 	public void addSlot(CardSlot slot) {
@@ -67,11 +54,12 @@ public class Layout {
 	}
 	
 	public void build() {
-		float xpos = 140;
-		float ypos = 230;
+		float xpos = (Main.scrw/2)-15-getCardWidth()*2;
+		float ypos = (Main.scrh/2)-getCardHeight()/2;
 		
 		CardSlot slot;
 		
+		//middle decks
 		for(int i = 0; i < 4; i++){
 			slot = new CardSlot(xpos,ypos);
 			Game.middleDecks.add(slot);
@@ -85,6 +73,7 @@ public class Layout {
 			xpos += 10;
 		}
 		
+		//deck
 		xpos += getCardHeight();
 		xpos += 10;
 		
@@ -113,14 +102,14 @@ public class Layout {
 		
 		for(CardSlot slot : cardslots) {
 			if(slot.getRotated()){
-				if(x <= slot.getX() && y >= slot.getY()){
-					if(x >= slot.getX()-getCardHeight() && y <= slot.getY()+getCardWidth()){
+				if(x <= slot.getX()*xscale && y >= slot.getY()*yscale){
+					if(x >= (slot.getX()*xscale)-(getCardHeight()*yscale) && y <= (slot.getY()*yscale)+(getCardWidth()*xscale)){
 						list.add(slot);
 					}
 				}
 			}else{
-				if(x >= slot.getX() && y >= slot.getY()){
-					if(x <= slot.getX()+getCardWidth() && y <= slot.getY()+getCardHeight()){
+				if(x >= slot.getX()*xscale && y >= slot.getY()*yscale){
+					if(x <= (slot.getX()*xscale)+(getCardWidth()*xscale) && y <= (slot.getY()*yscale)+(getCardHeight()*yscale)){
 						list.add(slot);
 					}
 				}
