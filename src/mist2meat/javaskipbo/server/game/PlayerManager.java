@@ -6,8 +6,9 @@ import java.util.ArrayList;
 
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.network.SendablePacket;
-import mist2meat.javaskipbo.network.server.CardOperationPacket;
+import mist2meat.javaskipbo.network.server.ServerMessagePacket;
 import mist2meat.javaskipbo.server.Server;
+import mist2meat.javaskipbo.server.ServerListener;
 
 
 public class PlayerManager {
@@ -67,12 +68,10 @@ public class PlayerManager {
 			pl.sendPacket(pack);
 		}
 	}
-
-	public static void broadcastPacketExcept(byte id, CardOperationPacket pack) throws IOException {
-		for(Player pl : PlayerManager.players){
-			if(pl.getID() != id) {
-				pl.sendPacket(pack);
-			}
-		}
+	
+	public static void broadcastMessage(String message) throws IOException {
+		ServerMessagePacket pack = new ServerMessagePacket(ServerListener.socket);
+		pack.setMessage(message);
+		broadcastPacket(pack);
 	}
 }

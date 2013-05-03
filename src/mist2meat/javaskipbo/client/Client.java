@@ -20,7 +20,8 @@ public class Client {
 	private ClientListener listener;
 	private InetAddress serveripaddr;
 	private GameWindow game;
-	private ChatWindow chatwindow;
+	
+	public static ChatWindow chatwindow;
 
 	public Client() {
 		listener = new ClientListener();

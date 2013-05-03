@@ -21,7 +21,7 @@ import org.newdawn.slick.SlickException;
 public class ClientEvents {
 
 	public static void serverMessage(String msg) {
-		Client.log("Server says: " + msg);
+		Client.chatwindow.addLine(msg);
 	}
 
 	public static void serverLoginResponse(byte response, byte id) {

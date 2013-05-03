@@ -18,4 +18,6 @@ public class PacketType {
 	public static final byte CARD_OPERATION = 9;
 	public static final byte MOVE_CARD = 10;
 	
+	public static final byte PLAYER_CHAT = 11;
+	
 }

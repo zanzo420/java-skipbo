@@ -36,6 +36,12 @@ public class ServerPacketHandler {
 				
 				ServerEvents.playerMoveCard(fromwho, fromdeckid, cardnum, towho, todeckid);
 				break;
+			case PacketType.PLAYER_CHAT:
+				byte from = pack.readByte();
+				String msg = pack.readString();
+				
+				ServerEvents.playerSay(from,msg);
+				break;
 			default:
 				Server.log("Unknown packet type: "+type);
 				break;

@@ -245,4 +245,16 @@ public class ServerEvents {
 			}
 		}
 	}
+
+	public static void playerSay(byte from, String msg) {
+		Player pl = PlayerManager.getPlayerByID(from);
+		
+		Server.log(pl.getName()+" says \""+msg+"\"");
+		
+		try {
+			PlayerManager.broadcastMessage(pl.getName()+": "+msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
