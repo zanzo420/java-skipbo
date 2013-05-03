@@ -20,6 +20,7 @@ public class Client {
 	private ClientListener listener;
 	private InetAddress serveripaddr;
 	private GameWindow game;
+	private ChatWindow chatwindow;
 
 	public Client() {
 		listener = new ClientListener();
@@ -104,6 +105,7 @@ public class Client {
 	
 	private void startGame() throws SlickException {
 		game = new GameWindow("Java Skip-Bo");
+		chatwindow = new ChatWindow();
 		final AppGameContainer app = new AppGameContainer(game);
 
 		app.setDisplayMode(Main.scrw, Main.scrh, false);
