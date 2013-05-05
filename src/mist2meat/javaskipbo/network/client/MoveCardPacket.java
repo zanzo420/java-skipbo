@@ -19,10 +19,12 @@ public class MoveCardPacket extends SendablePacket {
 		writeByte(slot.getOwner());
 		writeByte(slot.getDeckID());
 		writeByte(slot.getCard().getNum());
+		writeByte(slot.getType());
 	}
 	
 	public void setToSlot(CardSlot slot) throws IOException{
 		writeByte(slot.getOwner());
 		writeByte(slot.getDeckID());
+		writeByte(slot.getType());
 	}
 }

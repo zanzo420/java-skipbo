@@ -95,7 +95,7 @@ public class Layout_1v1 extends Layout {
 		Player pl = PlayerManager.players.get(0);
 		
 		g.setColor(pl.isMyTurn() ? Color.red : Color.white);
-		g.drawString(pl.getName(), Main.scrw/2+cw*3.5f-ch, 20);
+		g.drawString(pl.getName(), Main.scrw/2+40+cw*3.5f-ch, 20);
 		
 		g.setColor(Color.white);
 	}

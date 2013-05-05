@@ -31,10 +31,13 @@ public class ServerPacketHandler {
 				byte fromwho = pack.readByte();
 				byte fromdeckid = pack.readByte();
 				byte cardnum = pack.readByte();
+				byte fromslottype = pack.readByte();
+				
 				byte towho = pack.readByte();
 				byte todeckid = pack.readByte();
+				byte toslottype = pack.readByte();
 				
-				ServerEvents.playerMoveCard(fromwho, fromdeckid, cardnum, towho, todeckid);
+				ServerEvents.playerMoveCard(fromwho, fromdeckid, cardnum, towho, todeckid, fromslottype, toslottype);
 				break;
 			case PacketType.PLAYER_CHAT:
 				byte from = pack.readByte();

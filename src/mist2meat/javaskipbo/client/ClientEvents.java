@@ -13,6 +13,7 @@ import mist2meat.javaskipbo.client.game.Player;
 import mist2meat.javaskipbo.client.game.PlayerManager;
 import mist2meat.javaskipbo.client.popups.EnterNamePopup;
 import mist2meat.javaskipbo.enums.CardOperation;
+import mist2meat.javaskipbo.enums.CardSlotType;
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.network.ReceivedPacket;
 
@@ -22,6 +23,9 @@ public class ClientEvents {
 
 	public static void serverMessage(String msg) {
 		Client.chatwindow.addLine(msg);
+		if(!msg.startsWith(LocalPlayer.getName())){
+			GameWindow.chatsound.play((float) Math.max(0.4f,Math.random()*2f),1f);
+		}
 	}
 
 	public static void serverLoginResponse(byte response, byte id) {
@@ -58,8 +62,10 @@ public class ClientEvents {
 
 	public static void cardOperation(ReceivedPacket pack) throws IOException {
 		byte operation = pack.readByte();
-		
-		byte playerid,deckid,cardid,fromdeckid,todeckid;
+
+		CardSlot from = null,to;
+		byte playerid,deckid,cardid,fromdeckid,todeckid,slot,fromslottype;
+		boolean hascardunder;
 		
 		switch(operation){
 			case CardOperation.DRAW_FROM_DECK:
@@ -70,6 +76,7 @@ public class ClientEvents {
 				CardSlot toslot;
 				if(playerid == LocalPlayer.id){
 					toslot = LocalPlayer.deckslots.get(deckid);
+					toslot.setHasCardUnder(true);
 				}else{
 					toslot = PlayerManager.getPlayerByID(playerid).deckslots.get(deckid);
 				}
@@ -77,7 +84,7 @@ public class ClientEvents {
 				new AnimatedCard(Game.deck,toslot,cardid);
 				break;
 			case CardOperation.DRAW_TO_HAND:
-				byte slot = pack.readByte();
+				slot = pack.readByte();
 				cardid = pack.readByte();
 				
 				LocalPlayer.addToHand(slot,cardid);
@@ -85,6 +92,8 @@ public class ClientEvents {
 			case CardOperation.PUT_TO_MIDDLE:
 				playerid = pack.readByte();
 				fromdeckid = pack.readByte();
+				fromslottype = pack.readByte();
+				
 				todeckid = pack.readByte();
 				cardid = pack.readByte();
 				
@@ -94,31 +103,27 @@ public class ClientEvents {
 					wildcard = pack.readByte();
 				}
 				
-				if(fromdeckid >= 50){					
-					if(playerid == LocalPlayer.id){
-						LocalPlayer.handslots.get(fromdeckid-50).setCard(null);
-					}
-					
-					fromdeckid = 0;//TODO: figure out a better way to represent placing cards from hand
-				}else{
-					if(playerid == LocalPlayer.id){
-						if(fromdeckid >= 0 && fromdeckid <= 4){
-							LocalPlayer.deckslots.get(fromdeckid).setCard(null);
-						}
-					}
-				}
+				to = Game.middleDecks.get(todeckid);
 				
 				if(playerid == LocalPlayer.id){
-					new AnimatedCard(LocalPlayer.deckslots.get(fromdeckid),Game.middleDecks.get(todeckid),cardid,wildcard);
+					if(fromslottype == CardSlotType.HAND_SLOT){
+						from = LocalPlayer.handslots.get(fromdeckid);
+					}else if(fromslottype == CardSlotType.PLAYER_SLOT){
+						from = LocalPlayer.deckslots.get(fromdeckid);
+					}
+					from.setCard(null);
 				}else{
 					Player ply = PlayerManager.getPlayerByID(playerid);
 					
-					new AnimatedCard(ply.deckslots.get(0),Game.middleDecks.get(todeckid),cardid,wildcard);
-					
-					if(fromdeckid >= 1 && fromdeckid <= 4){
-						ply.deckslots.get(fromdeckid).setCard(null);
+					if(fromslottype == CardSlotType.HAND_SLOT){
+						from = ply.deckslots.get(0); //TODO: find a better way to display other players hand cards
+					}else if(fromslottype == CardSlotType.PLAYER_SLOT){
+						from = ply.deckslots.get(fromdeckid);
 					}
 				}
+				
+				new AnimatedCard(from,to,cardid,wildcard);
+				
 				break;
 			case CardOperation.PUT_TO_FREEDECK:
 				playerid = pack.readByte();
@@ -128,29 +133,32 @@ public class ClientEvents {
 				
 				cardid = pack.readByte();
 				
-				if(fromdeckid >= 50){
-					if(playerid == LocalPlayer.id){
-						LocalPlayer.handslots.get(fromdeckid-50).setCard(null);
-					}
-					
-					fromdeckid = 0;//TODO: figure out a better way to represent placing cards from hand
-				}
+				hascardunder = pack.readByte() == 1;
 				
 				if(playerid == LocalPlayer.id){
-					new AnimatedCard(LocalPlayer.deckslots.get(fromdeckid),LocalPlayer.deckslots.get(todeckid),cardid);
+					LocalPlayer.handslots.get(fromdeckid).setCard(null);
+					
+					from = LocalPlayer.handslots.get(fromdeckid);
+					to = LocalPlayer.deckslots.get(todeckid);
+					
+					to.setHasCardUnder(hascardunder);
 				}else{
 					Player ply = PlayerManager.getPlayerByID(playerid);
 					
-					new AnimatedCard(ply.deckslots.get(fromdeckid),ply.deckslots.get(todeckid),cardid);
+					from = ply.deckslots.get(0); //TODO: find a better way to display other players hand cards
+					to = ply.deckslots.get(todeckid);
 				}
+				
+				new AnimatedCard(from,to,cardid);
 				
 				break;
 			case CardOperation.SET_CARD:
 				playerid = pack.readByte();
 				deckid = pack.readByte();
 				cardid = pack.readByte();
-				boolean hascardunder = pack.readByte() == 1;
-
+				
+				hascardunder = pack.readByte() == 1;
+				
 				Card card = null;
 
 				if(cardid > 0){
@@ -166,7 +174,6 @@ public class ClientEvents {
 					Player ply = PlayerManager.getPlayerByID(playerid);
 
 					ply.deckslots.get(deckid).setCard(card);
-					ply.deckslots.get(deckid).setHasCardUnder(hascardunder);
 				}
 				
 				break;
@@ -186,6 +193,7 @@ public class ClientEvents {
 		LocalPlayer.myTurn = false;
 		if(playerid == LocalPlayer.id){
 			LocalPlayer.myTurn = true;
+			GameWindow.turnsound.play((float) (1.25-Math.random()*0.5),1f);
 			Client.log("Your turn");
 		}else{
 			Player pl = PlayerManager.getPlayerByID(playerid);
@@ -207,5 +215,9 @@ public class ClientEvents {
 			Client.chatwindow.addLine(winner.getName()+" won the game!");
 		}
 		Client.log("Game over");
+		
+		for(CardSlot slot : LocalPlayer.handslots) {
+			slot.setCard(null);
+		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
+import mist2meat.javaskipbo.enums.CardSlotType;
 
 public class Player {
 	
@@ -36,6 +37,7 @@ public class Player {
 		deckslots.add(slot);
 		
 		slot.setOwner(id);
+		slot.setType(CardSlotType.PLAYER_SLOT);
 	}
 
 	public void setTurn(boolean b) {

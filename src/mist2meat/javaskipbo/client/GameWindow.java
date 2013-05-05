@@ -18,6 +18,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class GameWindow extends BasicGame {
 	
@@ -31,6 +32,8 @@ public class GameWindow extends BasicGame {
 	public static ArrayList<Image> cards = new ArrayList<Image>();
 	
 	public static boolean gameRunning = false;
+	
+	public static Sound chatsound,turnsound;
 	
 	public GameWindow(String title) {
 		super(title);
@@ -54,6 +57,9 @@ public class GameWindow extends BasicGame {
 		}
 		
 		board = boards.get(0);
+		
+		chatsound = new Sound("sfx/chat.wav");
+		turnsound = new Sound("sfx/turn.wav");
 		
 		try {
 			new ReadyToPlayPacket(ClientListener.socket,Main.client.getServerAddress(),3625).send();
@@ -90,6 +96,11 @@ public class GameWindow extends BasicGame {
 	}
 
 	public void prepareGame() {
+		
+		if(gameRunning){
+			return;
+		}
+		
 		int boardid;
 		
 		switch(Main.getGamemode()){

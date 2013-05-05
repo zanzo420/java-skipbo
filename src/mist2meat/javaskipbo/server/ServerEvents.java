@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import mist2meat.javaskipbo.enums.CardOperation;
+import mist2meat.javaskipbo.enums.CardSlotType;
 import mist2meat.javaskipbo.enums.ServerLoginResponse;
 import mist2meat.javaskipbo.network.server.CardOperationPacket;
 import mist2meat.javaskipbo.network.server.PongClientPacket;
@@ -57,15 +58,13 @@ public class ServerEvents {
 		Server.currentGame.startGame();
 	}
 
-	public static void playerMoveCard(byte fromwho, byte fromdeckid, byte cardnum, byte towho, byte todeckid) throws IOException {
+	public static void playerMoveCard(byte fromwho, byte fromdeckid, byte cardnum, byte towho, byte todeckid, byte fromslottype, byte toslottype) throws IOException {
 		// TODO: Clean this up ALOT!
-		// PLYID 50 = hand
-		// PLYID 100 = middle decks
 		
 		Player fromplayer = PlayerManager.getPlayerByID(fromwho);
-		Server.log(fromplayer.getName()+" wants to move card "+cardnum+" from "+fromdeckid+" to "+towho+","+todeckid);
+		Server.log(fromplayer.getName()+" wants to move card "+cardnum+" from "+fromdeckid+" to "+towho+","+todeckid+" type: "+toslottype);
 		
-		if(towho >= 50 && towho <= 55){ // can't move to a hand slot
+		if(toslottype == CardSlotType.HAND_SLOT || toslottype == CardSlotType.CARD_DECK){ // drop the obvious invalid moves
 			return;
 		}
 		
@@ -75,12 +74,9 @@ public class ServerEvents {
 			return;
 		}
 			
-		if(towho == 100){ // to middle
-			if(todeckid > 4){
-				return;
-			}
-			
+		if(toslottype == CardSlotType.MIDDLE_SLOT){
 			boolean validMove = false;
+			
 			ArrayList<Card> deck = game.middleDecks.get((int)todeckid);
 			
 			if(deck.size() > 0){
@@ -92,19 +88,6 @@ public class ServerEvents {
 						deck.add(new Card(cardnum));
 					}
 					
-					CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
-					pack.setOperation(CardOperation.PUT_TO_MIDDLE);
-					pack.writeByte(fromwho);
-					pack.writeByte(fromdeckid);
-					pack.writeByte(todeckid);
-					pack.writeByte(cardnum);
-					
-					if(cardnum == 13){
-						pack.writeByte((byte)(topcard.getNum()+1));
-					}
-					
-					PlayerManager.broadcastPacket(pack);
-					
 					validMove = true;
 				}
 			}else{ // new middle deck
@@ -115,34 +98,36 @@ public class ServerEvents {
 						deck.add(new Card(cardnum));
 					}
 					
-					CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
-					pack.setOperation(CardOperation.PUT_TO_MIDDLE);
-					pack.writeByte(fromwho);
-					pack.writeByte(fromdeckid);
-					pack.writeByte(todeckid);
-					pack.writeByte(cardnum);
-					
-					if(cardnum == 13){
-						pack.writeByte((byte)1);
-					}
-					
-					PlayerManager.broadcastPacket(pack);
-					
 					validMove = true;
 				}
 			}
 			
 			if(validMove){
-				if(fromdeckid >= 50 && fromdeckid <= 55){
-					fromplayer.getHand().put(fromdeckid-50, null);
+				CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
+				pack.setOperation(CardOperation.PUT_TO_MIDDLE);
+				pack.writeByte(fromwho);
+				pack.writeByte(fromdeckid);
+				pack.writeByte(fromslottype);
+				
+				pack.writeByte(todeckid);
+				pack.writeByte(cardnum);
+				
+				if(cardnum == 13){
+					pack.writeByte(deck.get(deck.size()-1).getNum());
+				}
+				
+				PlayerManager.broadcastPacket(pack);
+				
+				if(fromslottype == CardSlotType.HAND_SLOT){
+					fromplayer.getHand().put((int) fromdeckid, null);
 					if(fromplayer.getHandCardNum() == 0){
 						fromplayer.fillHand();
 					}
 				}
 				
-				if(fromdeckid == 0){
-					if(fromplayer.getDeck().size() > 0){
-						ArrayList<Card> plydeck = fromplayer.getDeck();
+				if(fromslottype == CardSlotType.PLAYER_SLOT){
+					if(fromplayer.getDeck(fromdeckid).size() > 0){
+						ArrayList<Card> plydeck = fromplayer.getDeck(fromdeckid);
 						if(plydeck.size() > 0){
 							plydeck.remove(plydeck.size()-1);
 							
@@ -152,31 +137,15 @@ public class ServerEvents {
 							pack2.writeByte(fromdeckid);
 							if(plydeck.size() > 0){
 								pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
-								pack2.writeByte((byte) (plydeck.size() > 1 ? 1 : 0));
-								PlayerManager.broadcastPacket(pack2);
-							}else{
-								pack2.writeByte((byte)0);
-								pack2.writeByte((byte)0);
-								PlayerManager.broadcastPacket(pack2);
-								Server.currentGame.endGame(fromplayer);
-								return;
+								pack2.writeByte((byte)(plydeck.size() > 1 ? 1 : 0));
 							}
-						}
-					}
-				}else if(fromdeckid >= 1 && fromdeckid <= 4) {
-					ArrayList<Card> plydeck = fromplayer.getFreeDeck(fromdeckid);
-					if(plydeck.size() > 0){
-						plydeck.remove(plydeck.size()-1);
-						if(plydeck.size() > 0){
-							CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
-							pack2.setOperation(CardOperation.SET_CARD);
-							pack2.writeByte(fromwho);
-							pack2.writeByte(fromdeckid);
-							pack2.writeByte(plydeck.get(plydeck.size()-1).getNum());
-							pack2.writeByte((byte) (plydeck.size() > 1 ? 1 : 0));
-							
 							PlayerManager.broadcastPacket(pack2);
 						}
+					}
+					
+					if(fromplayer.getDeck(0).size() == 0){
+						Server.currentGame.endGame(fromplayer);
+						return;
 					}
 				}
 			}
@@ -199,27 +168,25 @@ public class ServerEvents {
 				
 				deck.clear();
 			}
-			
-			return;
-		}
-		
-		if(towho == fromwho){ // player moves to free deck
-			if(fromdeckid >= 50 && todeckid < 50){
+		}else if(toslottype == CardSlotType.PLAYER_SLOT){
+			if(fromslottype == CardSlotType.HAND_SLOT){
 				if(todeckid > 0){
-					fromplayer.getFreeDeck(todeckid).add(new Card(cardnum));
+					fromplayer.getDeck(todeckid).add(new Card(cardnum));
 					
 					CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
 					pack.setOperation(CardOperation.PUT_TO_FREEDECK);
 					pack.writeByte(fromwho);
 					pack.writeByte(fromdeckid);
+					
 					pack.writeByte(todeckid);
 					pack.writeByte(cardnum);
+					pack.writeByte((byte) (fromplayer.getDeck(todeckid).size() > 1 ? 1 : 0));
 					
 					PlayerManager.broadcastPacket(pack);
 					
 					Server.currentGame.endTurn();
 					
-					fromplayer.getHand().put(fromdeckid-50, null);
+					fromplayer.getHand().put((int) fromdeckid, null);
 				}
 			}
 		}

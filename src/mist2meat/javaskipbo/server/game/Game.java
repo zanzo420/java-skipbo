@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import mist2meat.javaskipbo.enums.CardOperation;
 import mist2meat.javaskipbo.network.server.BeginGamePacket;
+import mist2meat.javaskipbo.network.server.CardOperationPacket;
 import mist2meat.javaskipbo.network.server.EndGamePacket;
 import mist2meat.javaskipbo.network.server.PlayersTurnPacket;
 import mist2meat.javaskipbo.server.Server;
@@ -67,7 +69,7 @@ public class Game {
 		
 		for(int i = 1; i <= cards; i++){
 			for(Player pl : PlayerManager.players){
-				pl.addCardtoDeck(deck.get(deck.size()-1),i != cards);
+				pl.addCardtoDeck(0, deck.get(deck.size()-1),i != cards);
 				deck.remove(deck.size()-1);
 				try {
 					Thread.sleep(250);
@@ -89,13 +91,67 @@ public class Game {
 		PlayerManager.broadcastPacket(pack);
 		
 		for(Player p : PlayerManager.players){
-			PlayerManager.broadcastMessage(p.getName()+" had "+p.getDeck().size()+" cards left");
+			PlayerManager.broadcastMessage(p.getName()+" had "+p.getDeck(0).size()+" cards left");
 		}
 		
 		Server.log(winner.getName()+" won the game!");
 		Server.log("Game over!");
 		
+		PlayerManager.broadcastMessage("Game will restart in 10 seconds");
+		Server.log("Game will restart in 10 seconds");
+		
 		Server.currentGame = null;
+		
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					for(Player p : PlayerManager.players){
+						p.getHand().clear();
+						
+						for(int i = 0; i <= 4; i++){
+							p.getDeck(i).clear();
+							
+							CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);
+							pack.setOperation(CardOperation.SET_CARD);
+							pack.writeByte(p.getID());
+							pack.writeByte((byte) i);
+							pack.writeByte((byte) 0);
+							pack.writeByte((byte) 0);
+							PlayerManager.broadcastPacket(pack);
+						}
+						
+						p.initDecks();
+					}
+					
+					for(int i2 = 0; i2 < 4; i2++){
+						CardOperationPacket pack2 = new CardOperationPacket(ServerListener.socket);
+						pack2.setOperation(CardOperation.EMPTY_DECK);
+						pack2.writeByte((byte) i2);
+						
+						PlayerManager.broadcastPacket(pack2);
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				Server.currentGame = new Game();
+				Server.currentGame.startGame();
+			}
+		});
+		t.start();
 	}
 	
 	private void startTurn(){

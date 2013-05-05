@@ -2,12 +2,13 @@ package mist2meat.javaskipbo.client.drawable.cardlayout;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Graphics;
-
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
 import mist2meat.javaskipbo.client.game.Game;
+import mist2meat.javaskipbo.enums.CardSlotType;
+
+import org.newdawn.slick.Graphics;
 
 public class Layout {
 
@@ -66,8 +67,9 @@ public class Layout {
 			addSlot(slot);
 			slot.setCanTouch(false);
 			
-			slot.setOwner((byte)100);
+			slot.setOwner((byte)0);
 			slot.setDeckID((byte)i);
+			slot.setType(CardSlotType.MIDDLE_SLOT);
 			
 			xpos += getCardWidth();
 			xpos += 10;
@@ -86,8 +88,9 @@ public class Layout {
 		addSlot(slot);
 		slot.setCanTouch(false);
 		
-		slot.setOwner((byte)100);
+		slot.setOwner((byte)0);
 		slot.setDeckID((byte)5);
+		slot.setType(CardSlotType.CARD_DECK);
 	}
 
 	public boolean changed(int width, int height) {

@@ -33,6 +33,7 @@
 			<fileset dir=".">
 			    <include name="gfx/**"/>
 				<include name="lib/**"/>
+				<include name="sfx/**"/>
 			</fileset>
 		</copy>
 		

@@ -21,8 +21,7 @@ public class Player {
 	private int port;
 	
 	private Map<Integer,Card> hand = new HashMap<Integer,Card>();
-	private ArrayList<Card> deck = new ArrayList<Card>();
-	private Map<Integer, ArrayList<Card>> freedecks = new HashMap<Integer, ArrayList<Card>>();
+	private Map<Integer, ArrayList<Card>> decks = new HashMap<Integer, ArrayList<Card>>();
 	
 	public Player(byte i, String nam, InetAddress host, int prt){
 		id = i;
@@ -30,12 +29,16 @@ public class Player {
 		ip = host;
 		port = prt;
 		
+		initDecks();
+	}
+	
+	public void initDecks() {
 		for(int i2 = 0; i2 <= 4; i2++){
 			hand.put(i2, null);
 		}
 		
-		for(int i3 = 1; i3 <= 4; i3++){
-			freedecks.put(i3, new ArrayList<Card>());
+		for(int i3 = 0; i3 <= 4; i3++){
+			decks.put(i3, new ArrayList<Card>());
 		}
 	}
 	
@@ -53,16 +56,12 @@ public class Player {
 		pack.send();
 	}
 	
-	public ArrayList<Card> getFreeDeck(int id){
-		return freedecks.get(id);
+	public ArrayList<Card> getDeck(int id){
+		return decks.get(id);
 	}
 	
-	public ArrayList<Card> getDeck(){
-		return deck;
-	}
-	
-	public void addCardtoDeck(Card card, boolean hidden){
-		deck.add(card);
+	public void addCardtoDeck(int deckid, Card card, boolean hidden){
+		decks.get(deckid).add(card);
 		
 		try {
 			CardOperationPacket pack = new CardOperationPacket(ServerListener.socket);

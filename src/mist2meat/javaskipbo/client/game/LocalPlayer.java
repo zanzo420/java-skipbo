@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import mist2meat.javaskipbo.client.drawable.AnimatedCard;
 import mist2meat.javaskipbo.client.drawable.Card;
 import mist2meat.javaskipbo.client.drawable.CardSlot;
+import mist2meat.javaskipbo.enums.CardSlotType;
 
 public class LocalPlayer {
 
@@ -25,15 +26,16 @@ public class LocalPlayer {
 	}
 	
 	public static void addHandSlot(CardSlot slot) {
-		slot.setDeckID((byte)(50+handslots.size()));
+		slot.setDeckID((byte)(handslots.size()));
 		handslots.add(slot);
 		
 		slot.setOwner(id);
+		slot.setType(CardSlotType.HAND_SLOT);
 	}
 	
 	public static void addToHand(int slotnum, byte card) {
 		for(CardSlot slot : handslots){
-			if(!slot.hasCard() && slot.getDeckID() == 50+slotnum){
+			if(!slot.hasCard() && slot.getDeckID() == slotnum){
 				new AnimatedCard(Game.deck, slot, card);
 				break;
 			}
@@ -45,6 +47,7 @@ public class LocalPlayer {
 		deckslots.add(slot);
 		
 		slot.setOwner(id);
+		slot.setType(CardSlotType.PLAYER_SLOT);
 	}
 	
 	public static void setDeckCard(int deckid, int card) {

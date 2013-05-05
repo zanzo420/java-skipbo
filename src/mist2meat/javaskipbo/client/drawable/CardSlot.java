@@ -20,6 +20,7 @@ public class CardSlot {
 	
 	byte owner;
 	byte id;
+	byte type;
 	
 	public CardSlot(float x, float y) {
 		img = GameWindow.cardSlotImage;
@@ -153,5 +154,13 @@ public class CardSlot {
 	
 	public boolean canTouch() {
 		return touchable;
+	}
+
+	public void setType(byte typ) {
+		type = typ;
+	}
+	
+	public byte getType() {
+		return type;
 	}
 }
