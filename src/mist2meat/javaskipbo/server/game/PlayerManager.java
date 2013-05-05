@@ -22,6 +22,8 @@ public class PlayerManager {
 			return ServerLoginResponse.LOGIN_NAME_TAKEN;
 		} else if (players.size() >= maxplayers) {
 			return ServerLoginResponse.LOGIN_SERVER_FULL;
+		}else if(name.length() <= 2 || name.length() >= 15) {
+			return ServerLoginResponse.LOGIN_INVALID_NAME_LENGTH;
 		} else {
 			Player ply = new Player((byte)players.size(), name, ip, port);
 			players.add(ply);

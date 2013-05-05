@@ -68,7 +68,13 @@ public class Main {
 			server = new Server();
 			server.start();
 			
-			PlayerManager.maxplayers = (gamemode == GameMode.GAME_1VS1 ? 2 : 4);
+			if(gamemode == GameMode.GAME_1VS1){
+				PlayerManager.maxplayers = 2;
+			}else if(gamemode == GameMode.GAME_1VS1VS1){
+				PlayerManager.maxplayers = 3;
+			}else if(gamemode == GameMode.GAME_2VS2 || gamemode == GameMode.GAME_1VS1VS1VS1){
+				PlayerManager.maxplayers = 4;
+			}
 		}
 	}
 }

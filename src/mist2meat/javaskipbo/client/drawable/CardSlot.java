@@ -16,6 +16,7 @@ public class CardSlot {
 	boolean hidden = false;
 	boolean touchable = true;
 	boolean rotated;
+	boolean hasCardUnder = false;
 	
 	byte owner;
 	byte id;
@@ -52,7 +53,7 @@ public class CardSlot {
 		return id;
 	}
 	
-	public void setCard(Card card) {
+	public void setCard(Card card) {		
 		this.card = card;
 		
 		setPos(x,y); // update
@@ -72,11 +73,27 @@ public class CardSlot {
 			}
 			img.draw(x ,y, w, h);
 			img.setRotation(0);
+			
+			if(hasCardUnder){
+				Image i = GameWindow.cards.get(0);
+				if(rotated){
+					i.setCenterOfRotation(0, 0);
+					i.setRotation(90);
+					i.draw(x-2 ,y+2, w-4, h-4);
+				}else{
+					i.draw(x+2 ,y+2, w-4, h-4);
+				}
+				i.setRotation(0);
+			}
 		}
 		
 		if(card != null){
 			card.draw();
 		}
+	}
+	
+	public void setHasCardUnder(boolean has) {
+		hasCardUnder = has;
 	}
 	
 	public void setPos(float x, float y) {

@@ -7,6 +7,8 @@ import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.client.drawable.AnimatedCard;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout;
 import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1;
+import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1v1;
+import mist2meat.javaskipbo.client.drawable.cardlayout.Layout_1v1v1v1;
 import mist2meat.javaskipbo.client.game.DragNDropManager;
 import mist2meat.javaskipbo.enums.GameMode;
 import mist2meat.javaskipbo.network.client.ReadyToPlayPacket;
@@ -39,6 +41,7 @@ public class GameWindow extends BasicGame {
 		game.setAlwaysRender(true);
 		game.setClearEachFrame(false);
 		game.setTargetFrameRate(60);
+		game.setShowFPS(false);
 		
 		boards.add(new Image("gfx/boards/waiting.png"));
 		boards.add(new Image("gfx/boards/1v1.png"));
@@ -93,6 +96,14 @@ public class GameWindow extends BasicGame {
 			case GameMode.GAME_1VS1:
 				boardid = 1;
 				curLayout = new Layout_1v1();
+				break;
+			case GameMode.GAME_1VS1VS1:
+				boardid = 1;
+				curLayout = new Layout_1v1v1();
+				break;
+			case GameMode.GAME_1VS1VS1VS1:
+				boardid = 1;
+				curLayout = new Layout_1v1v1v1();
 				break;
 			default:
 				boardid = 0;

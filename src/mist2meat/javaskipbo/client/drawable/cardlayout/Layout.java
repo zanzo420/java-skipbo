@@ -54,7 +54,7 @@ public class Layout {
 	}
 	
 	public void build() {
-		float xpos = (Main.scrw/2)-15-getCardWidth()*2;
+		float xpos = (Main.scrw/2)-100-getCardWidth()*2;
 		float ypos = (Main.scrh/2)-getCardHeight()/2;
 		
 		CardSlot slot;

@@ -51,8 +51,7 @@ public class SendablePacket {
 	}
 	
 	public void writeString(String str) throws IOException {
-		dos.writeByte(str.length());
-		dos.writeBytes(str);
+		dos.writeUTF(str);
 	}
 	
 	public void clean() throws IOException {

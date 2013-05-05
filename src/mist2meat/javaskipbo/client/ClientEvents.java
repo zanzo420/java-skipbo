@@ -35,6 +35,9 @@ public class ClientEvents {
 		} else if (response == ServerLoginResponse.LOGIN_SERVER_FULL) {
 			Client.log("Login failed: server is full");
 			new EnterNamePopup(LocalPlayer.getName());
+		} else if (response == ServerLoginResponse.LOGIN_INVALID_NAME_LENGTH) {
+			Client.log("Login failed: invalid name length (2 >< 15)");
+			new EnterNamePopup(LocalPlayer.getName());
 		}
 	}
 
@@ -75,9 +78,9 @@ public class ClientEvents {
 				break;
 			case CardOperation.DRAW_TO_HAND:
 				byte slot = pack.readByte();
-				byte card = pack.readByte();
+				cardid = pack.readByte();
 				
-				LocalPlayer.addToHand(slot,card);
+				LocalPlayer.addToHand(slot,cardid);
 				break;
 			case CardOperation.PUT_TO_MIDDLE:
 				playerid = pack.readByte();
@@ -146,12 +149,24 @@ public class ClientEvents {
 				playerid = pack.readByte();
 				deckid = pack.readByte();
 				cardid = pack.readByte();
+				boolean hascardunder = pack.readByte() == 1;
+
+				Card card = null;
+
+				if(cardid > 0){
+					card = new Card(cardid);
+				}else{
+					hascardunder = false;
+				}
 				
 				if(playerid == LocalPlayer.id){
-					LocalPlayer.deckslots.get(deckid).setCard(new Card(cardid));
+					LocalPlayer.deckslots.get(deckid).setCard(card);
+					LocalPlayer.deckslots.get(deckid).setHasCardUnder(hascardunder);
 				}else{
 					Player ply = PlayerManager.getPlayerByID(playerid);
-					ply.deckslots.get(deckid).setCard(new Card(cardid));
+
+					ply.deckslots.get(deckid).setCard(card);
+					ply.deckslots.get(deckid).setHasCardUnder(hascardunder);
 				}
 				
 				break;
@@ -167,12 +182,15 @@ public class ClientEvents {
 	}
 
 	public static void playersTurn(byte playerid) {
+		PlayerManager.resetTurn();
+		LocalPlayer.myTurn = false;
 		if(playerid == LocalPlayer.id){
 			LocalPlayer.myTurn = true;
-			PlayerManager.resetTurn();
+			Client.log("Your turn");
 		}else{
-			LocalPlayer.myTurn = false;
-			PlayerManager.getPlayerByID(playerid).setTurn(true);
+			Player pl = PlayerManager.getPlayerByID(playerid);
+			pl.setTurn(true);
+			Client.log(pl.getName()+"'s turn");
 		}
 	}
 
@@ -181,10 +199,12 @@ public class ClientEvents {
 		LocalPlayer.myTurn = false;
 		
 		if(winnerid == LocalPlayer.id){
-			Client.log(LocalPlayer.getName()+" won the game!");
+			Client.log("You won the game!");
+			Client.chatwindow.addLine("You won the game!");
 		}else{
 			Player winner = PlayerManager.getPlayerByID(winnerid);
 			Client.log(winner.getName()+" won the game!");
+			Client.chatwindow.addLine(winner.getName()+" won the game!");
 		}
 		Client.log("Game over");
 	}

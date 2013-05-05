@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
 import mist2meat.javaskipbo.Main;
 import mist2meat.javaskipbo.network.client.PlayerChatPacket;
@@ -28,12 +27,15 @@ public class ChatWindow extends JFrame{
 		setLayout(null);
 		setResizable(false);
 		
+		JScrollPane pane = new JScrollPane();
+		pane.setBounds(2,5,290,290);
+		
 		box = new JTextArea();
 		box.setEditable(false);
+		box.setLineWrap(true);
+    	box.setWrapStyleWord(true);
 		
-		JScrollPane pane = new JScrollPane(box);
-		pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		pane.setBounds(2,5,290,290);
+		pane.getViewport().add(box);
 		add(pane);
 		
 		final JTextField text = new JTextField();
@@ -55,10 +57,12 @@ public class ChatWindow extends JFrame{
 			@Override
 			public void keyReleased(KeyEvent e) {}
 		});
+		
+		validate();
 	}
 	
 	private void sendMessage(String message) {
-		if(GameWindow.gameRunning && message.trim().length() > 0){
+		if(message.trim().length() > 0){
 			try {
 				PlayerChatPacket pack = new PlayerChatPacket(ClientListener.socket,Main.client.getServerAddress(),3625);
 				pack.setMessage(message);

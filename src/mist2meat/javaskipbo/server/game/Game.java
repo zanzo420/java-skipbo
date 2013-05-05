@@ -22,7 +22,11 @@ public class Game {
 		setUpGame();
 		
 		try {
-			PlayerManager.broadcastPacket(new BeginGamePacket(ServerListener.socket));
+			for(Player p : PlayerManager.players){
+				BeginGamePacket pack = new BeginGamePacket(ServerListener.socket);
+				pack.setTargetPlayer(p);
+				p.sendPacket(pack);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,7 +51,9 @@ public class Game {
 			
 		}
 		
-		Collections.shuffle(deck);
+		for(int i = 0; i < 10; i++){
+			Collections.shuffle(deck);
+		}
 		
 		for(int i = 1; i <= 4; i++){
 			middleDecks.add(new ArrayList<Card>());
@@ -64,7 +70,7 @@ public class Game {
 				pl.addCardtoDeck(deck.get(deck.size()-1),i != cards);
 				deck.remove(deck.size()-1);
 				try {
-					Thread.sleep(500);
+					Thread.sleep(250);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -81,6 +87,10 @@ public class Game {
 		EndGamePacket pack = new EndGamePacket(ServerListener.socket);
 		pack.setWinner(winner);
 		PlayerManager.broadcastPacket(pack);
+		
+		for(Player p : PlayerManager.players){
+			PlayerManager.broadcastMessage(p.getName()+" had "+p.getDeck().size()+" cards left");
+		}
 		
 		Server.log(winner.getName()+" won the game!");
 		Server.log("Game over!");

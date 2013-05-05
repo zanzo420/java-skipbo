@@ -17,11 +17,15 @@ public class BeginGamePacket extends SendablePacket {
 		writeByte(Main.getGamemode());
 		
 		writeByte((byte)PlayerManager.getNumPlayers());
+	}
+	
+	public void setTargetPlayer(Player ply) throws IOException{
+		byte id = ply.getID();
 		
-		for(Player p : PlayerManager.players) {
+		for(int i = 0;i < PlayerManager.maxplayers;i++){
+			Player p = PlayerManager.players.get((id+i) % PlayerManager.maxplayers);
 			writeByte(p.getID());
 			writeString(p.getName());
 		}
 	}
-
 }

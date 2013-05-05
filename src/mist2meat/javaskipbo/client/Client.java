@@ -105,8 +105,8 @@ public class Client {
 	
 	
 	private void startGame() throws SlickException {
-		game = new GameWindow("Java Skip-Bo");
 		chatwindow = new ChatWindow();
+		game = new GameWindow("Java Skip-Bo");
 		final AppGameContainer app = new AppGameContainer(game);
 
 		app.setDisplayMode(Main.scrw, Main.scrh, false);

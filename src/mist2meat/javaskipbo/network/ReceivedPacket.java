@@ -32,12 +32,7 @@ public class ReceivedPacket {
 	}
 	
 	public String readString() throws IOException {
-		String out = "";
-		int len = dis.readByte();
-		for(int i = 0;i < len; i++){
-			out += (char)dis.readByte();
-		}
-		return out;
+		return dis.readUTF();
 	}
 	
 	public void clean() throws IOException {
