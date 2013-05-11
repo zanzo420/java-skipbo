@@ -15,15 +15,15 @@ public class BeginGamePacket extends SendablePacket {
 		super(sock);
 		writeByte(PacketType.GAME_BEGIN);
 		writeByte(Main.getGamemode());
-		
-		writeByte((byte)PlayerManager.getNumPlayers());
+
+		writeByte((byte) PlayerManager.getNumPlayers());
 	}
-	
-	public void setTargetPlayer(Player ply) throws IOException{
+
+	public void setTargetPlayer(Player ply) throws IOException {
 		byte id = ply.getID();
-		
-		for(int i = 0;i < PlayerManager.maxplayers;i++){
-			Player p = PlayerManager.players.get((id+i) % PlayerManager.maxplayers);
+
+		for (int i = 0; i < PlayerManager.minplayers; i++) {
+			Player p = PlayerManager.players.get((id + i) % PlayerManager.minplayers);
 			writeByte(p.getID());
 			writeString(p.getName());
 		}

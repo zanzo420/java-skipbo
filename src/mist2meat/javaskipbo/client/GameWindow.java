@@ -35,6 +35,8 @@ public class GameWindow extends BasicGame {
 	
 	public static Sound chatsound,turnsound;
 	
+	public long nextServerCheck = 0;
+	
 	public GameWindow(String title) {
 		super(title);
 	}
@@ -92,6 +94,12 @@ public class GameWindow extends BasicGame {
 				curLayout.update(container.getWidth(),container.getHeight());
 			}
 			AnimatedCard.updateAnimations();
+		}
+		if(System.currentTimeMillis() > nextServerCheck){
+			if((System.currentTimeMillis() - Client.lastServerPing) > 3000){
+				Client.log("Server went away?");
+			}
+			nextServerCheck = System.currentTimeMillis() + 5000;
 		}
 	}
 

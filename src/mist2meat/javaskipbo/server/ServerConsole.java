@@ -34,7 +34,7 @@ public class ServerConsole extends JFrame {
     	pane.getViewport().add(area);
     	add(pane);
 		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		setVisible(true);
 		

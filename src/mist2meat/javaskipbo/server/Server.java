@@ -1,6 +1,7 @@
 package mist2meat.javaskipbo.server;
 
 import mist2meat.javaskipbo.server.game.Game;
+import mist2meat.javaskipbo.server.game.PlayerManager;
 
 public class Server {
 
@@ -20,6 +21,7 @@ public class Server {
 	
 	public void init() {
 		listener.setPassive(true);
+		PlayerManager.startPinging();
 		log("Server initialized");
 	}
 	

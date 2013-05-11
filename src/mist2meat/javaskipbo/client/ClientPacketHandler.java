@@ -8,15 +8,10 @@ import mist2meat.javaskipbo.network.ReceivedPacket;
 import mist2meat.javaskipbo.client.game.PlayerManager;
 
 public class ClientPacketHandler {
-
-	public ClientPacketHandler() {
-		
-	}
-	
 	public void parse(DatagramPacket packet) throws IOException {
 		ReceivedPacket pack = new ReceivedPacket(packet);
 		int type = pack.readByte();
-		switch(type){
+		switch (type) {
 			case PacketType.PONG:
 				ClientEvents.serverPong(pack.getPacket().getAddress());
 				break;
@@ -24,20 +19,21 @@ public class ClientPacketHandler {
 				ClientEvents.serverMessage(pack.readString());
 				break;
 			case PacketType.SERVER_LOGIN_RESPONSE:
-				ClientEvents.serverLoginResponse(pack.readByte(),pack.readByte());
+				ClientEvents.serverLoginResponse(pack.readByte(), pack.readByte());
 				break;
 			case PacketType.GAME_BEGIN:
 				byte gamemode = pack.readByte();
-				
+
 				byte playercount = pack.readByte();
-				for(int i = 0; i < playercount; i++){
-					PlayerManager.newPlayer(pack.readByte(),pack.readString());
+				for (int i = 0; i < playercount; i++) {
+					PlayerManager.newPlayer(pack.readByte(), pack.readString());
 				}
-				
+
 				ClientEvents.beginGame(gamemode);
 				break;
 			case PacketType.GAME_END:
-				ClientEvents.endGame(pack.readByte());
+				boolean success = pack.readByte() == 1;
+				ClientEvents.endGame(pack.readByte(), success);
 				break;
 			case PacketType.CARD_OPERATION:
 				ClientEvents.cardOperation(pack);
@@ -45,9 +41,14 @@ public class ClientPacketHandler {
 			case PacketType.PLAYERS_TURN:
 				ClientEvents.playersTurn(pack.readByte());
 				break;
+			case PacketType.PLAYER_PING:
+				ClientEvents.serverPinged();
+				pack.sendBack();
+				break;
 			default:
-				Client.log("Unknown packet type: "+type);
+				Client.log("Unknown packet type: " + type);
 				break;
 		}
+		pack.clean();
 	}
 }

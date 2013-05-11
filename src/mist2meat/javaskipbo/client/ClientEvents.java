@@ -23,8 +23,10 @@ public class ClientEvents {
 
 	public static void serverMessage(String msg) {
 		Client.chatwindow.addLine(msg);
-		if(!msg.startsWith(LocalPlayer.getName())){
-			GameWindow.chatsound.play((float) Math.max(0.4f,Math.random()*2f),1f);
+		if (!msg.startsWith(LocalPlayer.getName()) && GameWindow.chatsound != null) {
+			if (!GameWindow.chatsound.playing()) {
+				GameWindow.chatsound.play((float) Math.max(0.4f, Math.random() * 2f), 1f);
+			}
 		}
 	}
 
@@ -63,127 +65,131 @@ public class ClientEvents {
 	public static void cardOperation(ReceivedPacket pack) throws IOException {
 		byte operation = pack.readByte();
 
-		CardSlot from = null,to;
-		byte playerid,deckid,cardid,fromdeckid,todeckid,slot,fromslottype;
+		CardSlot from = null, to;
+		byte playerid, deckid, cardid, fromdeckid, todeckid, slot, fromslottype;
 		boolean hascardunder;
-		
-		switch(operation){
+
+		switch (operation) {
 			case CardOperation.DRAW_FROM_DECK:
 				playerid = pack.readByte();
 				deckid = pack.readByte();
 				cardid = pack.readByte();
-				
+
 				CardSlot toslot;
-				if(playerid == LocalPlayer.id){
+				if (playerid == LocalPlayer.id) {
 					toslot = LocalPlayer.deckslots.get(deckid);
 					toslot.setHasCardUnder(true);
-				}else{
+				} else {
 					toslot = PlayerManager.getPlayerByID(playerid).deckslots.get(deckid);
 				}
-				
-				new AnimatedCard(Game.deck,toslot,cardid);
+
+				new AnimatedCard(Game.deck, toslot, cardid);
 				break;
 			case CardOperation.DRAW_TO_HAND:
 				slot = pack.readByte();
 				cardid = pack.readByte();
-				
-				LocalPlayer.addToHand(slot,cardid);
+
+				LocalPlayer.addToHand(slot, cardid);
 				break;
 			case CardOperation.PUT_TO_MIDDLE:
 				playerid = pack.readByte();
 				fromdeckid = pack.readByte();
 				fromslottype = pack.readByte();
-				
+
 				todeckid = pack.readByte();
 				cardid = pack.readByte();
-				
+
 				byte wildcard = 0;
-				
-				if(cardid == 13){
+
+				if (cardid == 13) {
 					wildcard = pack.readByte();
 				}
-				
+
 				to = Game.middleDecks.get(todeckid);
-				
-				if(playerid == LocalPlayer.id){
-					if(fromslottype == CardSlotType.HAND_SLOT){
+
+				if (playerid == LocalPlayer.id) {
+					if (fromslottype == CardSlotType.HAND_SLOT) {
 						from = LocalPlayer.handslots.get(fromdeckid);
-					}else if(fromslottype == CardSlotType.PLAYER_SLOT){
+					} else if (fromslottype == CardSlotType.PLAYER_SLOT) {
 						from = LocalPlayer.deckslots.get(fromdeckid);
 					}
 					from.setCard(null);
-				}else{
+				} else {
 					Player ply = PlayerManager.getPlayerByID(playerid);
-					
-					if(fromslottype == CardSlotType.HAND_SLOT){
-						from = ply.deckslots.get(0); //TODO: find a better way to display other players hand cards
-					}else if(fromslottype == CardSlotType.PLAYER_SLOT){
+
+					if (fromslottype == CardSlotType.HAND_SLOT) {
+						from = ply.deckslots.get(0); // TODO: find a better way
+														// to display other
+														// players hand cards
+					} else if (fromslottype == CardSlotType.PLAYER_SLOT) {
 						from = ply.deckslots.get(fromdeckid);
 					}
 				}
-				
-				new AnimatedCard(from,to,cardid,wildcard);
-				
+
+				new AnimatedCard(from, to, cardid, wildcard);
+
 				break;
 			case CardOperation.PUT_TO_FREEDECK:
 				playerid = pack.readByte();
-				
+
 				fromdeckid = pack.readByte();
 				todeckid = pack.readByte();
-				
+
 				cardid = pack.readByte();
-				
+
 				hascardunder = pack.readByte() == 1;
-				
-				if(playerid == LocalPlayer.id){
+
+				if (playerid == LocalPlayer.id) {
 					LocalPlayer.handslots.get(fromdeckid).setCard(null);
-					
+
 					from = LocalPlayer.handslots.get(fromdeckid);
 					to = LocalPlayer.deckslots.get(todeckid);
-					
+
 					to.setHasCardUnder(hascardunder);
-				}else{
+				} else {
 					Player ply = PlayerManager.getPlayerByID(playerid);
-					
-					from = ply.deckslots.get(0); //TODO: find a better way to display other players hand cards
+
+					from = ply.deckslots.get(0); // TODO: find a better way to
+													// display other players
+													// hand cards
 					to = ply.deckslots.get(todeckid);
 				}
-				
-				new AnimatedCard(from,to,cardid);
-				
+
+				new AnimatedCard(from, to, cardid);
+
 				break;
 			case CardOperation.SET_CARD:
 				playerid = pack.readByte();
 				deckid = pack.readByte();
 				cardid = pack.readByte();
-				
+
 				hascardunder = pack.readByte() == 1;
-				
+
 				Card card = null;
 
-				if(cardid > 0){
+				if (cardid > 0) {
 					card = new Card(cardid);
-				}else{
+				} else {
 					hascardunder = false;
 				}
-				
-				if(playerid == LocalPlayer.id){
+
+				if (playerid == LocalPlayer.id) {
 					LocalPlayer.deckslots.get(deckid).setCard(card);
 					LocalPlayer.deckslots.get(deckid).setHasCardUnder(hascardunder);
-				}else{
+				} else {
 					Player ply = PlayerManager.getPlayerByID(playerid);
 
 					ply.deckslots.get(deckid).setCard(card);
 				}
-				
+
 				break;
 			case CardOperation.EMPTY_DECK:
 				deckid = pack.readByte();
-				
+
 				Game.middleDecks.get(deckid).setCard(null);
 				break;
 			default:
-				Client.log("Unknown card operation: "+operation);
+				Client.log("Unknown card operation: " + operation);
 				break;
 		}
 	}
@@ -191,33 +197,41 @@ public class ClientEvents {
 	public static void playersTurn(byte playerid) {
 		PlayerManager.resetTurn();
 		LocalPlayer.myTurn = false;
-		if(playerid == LocalPlayer.id){
+		if (playerid == LocalPlayer.id) {
 			LocalPlayer.myTurn = true;
-			GameWindow.turnsound.play((float) (1.25-Math.random()*0.5),1f);
+			GameWindow.turnsound.play((float) (1.25 - Math.random() * 0.5), 1f);
 			Client.log("Your turn");
-		}else{
+		} else {
 			Player pl = PlayerManager.getPlayerByID(playerid);
 			pl.setTurn(true);
-			Client.log(pl.getName()+"'s turn");
+			Client.log(pl.getName() + "'s turn");
 		}
 	}
 
-	public static void endGame(byte winnerid) {
+	public static void endGame(byte winnerid, boolean succesful) {
 		PlayerManager.resetTurn();
 		LocalPlayer.myTurn = false;
-		
-		if(winnerid == LocalPlayer.id){
-			Client.log("You won the game!");
-			Client.chatwindow.addLine("You won the game!");
+
+		if(succesful){
+			if (winnerid == LocalPlayer.id) {
+				Client.log("You won the game!");
+				Client.chatwindow.addLine("You won the game!");
+			} else {
+				Player winner = PlayerManager.getPlayerByID(winnerid);
+				Client.log(winner.getName() + " won the game!");
+				Client.chatwindow.addLine(winner.getName() + " won the game!");
+			}
+			Client.log("Game over");
 		}else{
-			Player winner = PlayerManager.getPlayerByID(winnerid);
-			Client.log(winner.getName()+" won the game!");
-			Client.chatwindow.addLine(winner.getName()+" won the game!");
+			Client.log("Game has ended");
 		}
-		Client.log("Game over");
-		
-		for(CardSlot slot : LocalPlayer.handslots) {
+
+		for (CardSlot slot : LocalPlayer.handslots) {
 			slot.setCard(null);
 		}
+	}
+
+	public static void serverPinged() {
+		Client.lastServerPing = System.currentTimeMillis();
 	}
 }

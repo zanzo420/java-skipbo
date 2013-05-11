@@ -69,11 +69,11 @@ public class Main {
 			server.start();
 			
 			if(gamemode == GameMode.GAME_1VS1){
-				PlayerManager.maxplayers = 2;
+				PlayerManager.minplayers = 2;
 			}else if(gamemode == GameMode.GAME_1VS1VS1){
-				PlayerManager.maxplayers = 3;
+				PlayerManager.minplayers = 3;
 			}else if(gamemode == GameMode.GAME_2VS2 || gamemode == GameMode.GAME_1VS1VS1VS1){
-				PlayerManager.maxplayers = 4;
+				PlayerManager.minplayers = 4;
 			}
 		}
 	}
