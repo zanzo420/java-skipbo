@@ -111,7 +111,6 @@ public class Client {
 		final AppGameContainer app = new AppGameContainer(game);
 
 		app.setDisplayMode(Main.scrw, Main.scrh, false);
-		app.setResizable(true);
 
 		Thread t = new Thread(new Runnable() {
 			@Override
