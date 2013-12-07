@@ -26,8 +26,7 @@ public class ReceivedPacket {
 	}
 	
 	public byte readByte() throws IOException {
-		byte byt = dis.readByte();
-		return byt;
+		return dis.readByte();
 	}
 	
 	public String readString() throws IOException {
