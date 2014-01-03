@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
 import mist2meat.javaskipbo.client.GameWindow;
+import mist2meat.javaskipbo.client.game.Game;
 import mist2meat.javaskipbo.enums.CardSlotType;
 
 import org.newdawn.slick.Image;
@@ -87,6 +88,7 @@ public class AnimatedCard {
 			if(toslot.getType() == CardSlotType.MIDDLE_SLOT){
 				if(c.getNum() == 12 || wildcard == 12){
 					toslot.setCard(null);
+					new AnimatedCard(toslot, Game.deck, (byte)0);
 				}
 			}
 		} else {
